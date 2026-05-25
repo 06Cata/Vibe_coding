@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 import { createSupabaseAdminClient } from "../lib/supabase/client";
-import { formatRocDate, getTaipeiDateParam, parseNumber } from "../lib/stock/format";
+import { formatRocDate, parseNumber } from "../lib/stock/format";
 
 config({ path: ".env.local" });
 
@@ -25,6 +25,53 @@ type YahooChartResponse = {
 function formatDateForDatabase(date: string) {
   const [year, month, day] = formatRocDate(date).split("/");
   return `${year}-${month}-${day}`;
+}
+
+function getTaipeiToday() {
+  const [year, month, day] = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Taipei",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  })
+    .format(new Date())
+    .split("-")
+    .map(Number);
+
+  return new Date(Date.UTC(year, month - 1, day));
+}
+
+function formatDateParam(date: Date) {
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  return `${year}${month}${day}`;
+}
+
+function getLookbackWindow(days: number) {
+  const end = getTaipeiToday();
+  const start = new Date(end);
+  start.setUTCDate(start.getUTCDate() - days);
+
+  return {
+    start,
+    end,
+    startKey: formatDateParam(start),
+    endKey: formatDateParam(end),
+  };
+}
+
+function getMonthDateParams(start: Date, end: Date) {
+  const params: string[] = [];
+  const cursor = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), 1));
+  const lastMonth = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), 1));
+
+  while (cursor <= lastMonth) {
+    params.push(formatDateParam(cursor));
+    cursor.setUTCMonth(cursor.getUTCMonth() + 1);
+  }
+
+  return params;
 }
 
 async function fetchTwseData(url: string) {
@@ -116,16 +163,21 @@ async function getFearIndexRow() {
 
 async function main() {
   const supabase = createSupabaseAdminClient();
-  const dateParam = getTaipeiDateParam();
+  const lookback = getLookbackWindow(60);
+  const monthDateParams = getMonthDateParams(lookback.start, lookback.end);
 
-  const [taiexRows, taiwan50Rows, tsmcRows, fearIndexRow] = await Promise.all([
-    getTaiexRows(dateParam),
-    getStockRows(dateParam, "0050"),
-    getStockRows(dateParam, "2330"),
+  const [taiexRowGroups, taiwan50RowGroups, tsmcRowGroups, fearIndexRow] = await Promise.all([
+    Promise.all(monthDateParams.map((dateParam) => getTaiexRows(dateParam))),
+    Promise.all(monthDateParams.map((dateParam) => getStockRows(dateParam, "0050"))),
+    Promise.all(monthDateParams.map((dateParam) => getStockRows(dateParam, "2330"))),
     getFearIndexRow(),
   ]);
 
-  const seriesRows = [...taiexRows, ...taiwan50Rows, ...tsmcRows];
+  const seriesRows = [...taiexRowGroups.flat(), ...taiwan50RowGroups.flat(), ...tsmcRowGroups.flat()]
+    .filter((row) => {
+      const dateKey = row.trade_date.replaceAll("-", "");
+      return dateKey >= lookback.startKey && dateKey <= lookback.endKey;
+    });
 
   const { error: seriesError } = await supabase
     .from("market_series")
