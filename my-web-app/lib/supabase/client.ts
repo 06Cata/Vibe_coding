@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClientOptions } from "@supabase/supabase-js";
 import ws from "ws";
 
 function requireEnv(name: string) {
@@ -11,13 +11,15 @@ function requireEnv(name: string) {
   return value;
 }
 
-const serverOptions = {
+const serverOptions: SupabaseClientOptions<"public"> = {
   auth: {
     persistSession: false,
     autoRefreshToken: false,
   },
   realtime: {
-    transport: ws,
+    transport: ws as unknown as NonNullable<
+      NonNullable<SupabaseClientOptions<"public">["realtime"]>["transport"]
+    >,
   },
 };
 
