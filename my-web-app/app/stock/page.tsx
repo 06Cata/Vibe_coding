@@ -1,6 +1,6 @@
 import StockDashboard from "./StockDashboard";
 import { STOCK_CONFIG } from "@/lib/stock/constants";
-import { createSupabaseServerClient } from "@/lib/supabase/client";
+import { createSupabaseAdminClient } from "@/lib/supabase/client";
 import type { MarketOverviewData, StockSectionData } from "@/lib/stock/types";
 
 export const dynamic = "force-dynamic";
@@ -25,7 +25,7 @@ type OverviewRow = {
 };
 
 export default async function StockPage() {
-  const supabase = createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
 
   const [{ data: seriesRows, error: seriesError }, { data: overviewRows, error: overviewError }] =
     await Promise.all([
