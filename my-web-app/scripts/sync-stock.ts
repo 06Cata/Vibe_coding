@@ -83,8 +83,14 @@ async function fetchTwseData(url: string) {
 
   const data = (await response.json()) as TwseResponse;
 
-  if (data.stat !== "OK" || !data.data?.length) {
-    throw new Error(`TWSE data is empty: ${url}`);
+  if (data.stat !== "OK") {
+    console.warn(`TWSE request returned non-OK status and will be skipped: ${url}`);
+    return [];
+  }
+
+  if (!data.data?.length) {
+    console.warn(`TWSE data is empty and will be skipped: ${url}`);
+    return [];
   }
 
   return data.data;
