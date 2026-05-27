@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { createSupabaseAdminClient } from "../../lib/supabase";
+import { MARKET_OVERVIEW_TABLE, MARKET_SERIES_TABLE } from "../../lib/market-tables";
 import {
   MarketOverviewData,
   STOCK_CONFIG,
@@ -38,13 +39,13 @@ export class StocksService {
     const [{ data: seriesRows, error: seriesError }, { data: overviewRows, error: overviewError }] =
       await Promise.all([
         supabase
-          .from("market_series")
+          .from(MARKET_SERIES_TABLE)
           .select("symbol, trade_date, label, open, high, low, close")
           .in("symbol", [...sectionSymbols])
           .gte("trade_date", lookbackKey)
           .order("trade_date", { ascending: true }),
         supabase
-          .from("market_overview")
+          .from(MARKET_OVERVIEW_TABLE)
           .select("item_key, data_date, label, value, score, description")
           .in("item_key", ["fear_index", "business_signal"])
           .order("data_date", { ascending: false }),

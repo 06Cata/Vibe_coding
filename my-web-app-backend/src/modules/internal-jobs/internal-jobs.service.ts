@@ -1,4 +1,5 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { MARKET_OVERVIEW_TABLE, MARKET_SERIES_TABLE } from "../../lib/market-tables";
 import { createSupabaseAdminClient } from "../../lib/supabase";
 
 type TwseResponse = {
@@ -211,7 +212,7 @@ export class InternalJobsService {
     });
 
     const { error: seriesError } = await supabase
-      .from("market_series")
+      .from(MARKET_SERIES_TABLE)
       .upsert(seriesRows, { onConflict: "symbol,trade_date" });
 
     if (seriesError) {
@@ -231,7 +232,7 @@ export class InternalJobsService {
     ];
 
     const { error: overviewError } = await supabase
-      .from("market_overview")
+      .from(MARKET_OVERVIEW_TABLE)
       .upsert(overviewRows, { onConflict: "item_key,data_date" });
 
     if (overviewError) {

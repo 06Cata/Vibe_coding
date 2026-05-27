@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "0 8 * * 1-5"
   workflow_dispatch:
+    inputs:
+      days:
+        description: "Lookback days to sync"
+        required: false
+        default: "60"
 
 jobs:
   sync:
@@ -12,7 +17,7 @@ jobs:
     steps:
       - name: Trigger backend stock sync
         run: |
-          curl -X POST "${{ secrets.BACKEND_SYNC_URL }}" \
+          curl --fail-with-body --show-error --silent -X POST "${{ secrets.BACKEND_SYNC_URL }}" \
             -H "Authorization: Bearer ${{ secrets.INTERNAL_CRON_TOKEN }}" \
             -H "Content-Type: application/json" \
-            -d '{"days":60}'
+            -d "{\"days\":${{ github.event.inputs.days || '60' }}}"
