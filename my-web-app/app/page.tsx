@@ -31,6 +31,12 @@ const apps = [
     title: "模型比較",
     description: "同一個 prompt 同時送給 OpenAI 與 Gemini，比較回覆內容與回應時間。",
   },
+  {
+    href: "/copywriter",
+    emoji: "✍️",
+    title: "貼文產生器",
+    description: "輸入服務、推廣重點與風格，快速產出台灣小商家的社群貼文。",
+  },
 ];
 
 export default function Home() {
@@ -46,7 +52,7 @@ export default function Home() {
           </h1>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-6">
           {apps.map((app) => (
             <Link
               key={app.href}

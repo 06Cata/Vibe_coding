@@ -25,7 +25,7 @@ const providers: Record<ProviderKey, ProviderState> = {
   gemini: {
     label: "Gemini",
     endpoint: "/api/gemini",
-    model: "gemini-2.5-flash",
+    model: "gemini-2.5-flash-lite",
   },
 };
 

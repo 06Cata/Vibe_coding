@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "My Web Apps",
-  description: "公司附近吃什麼、即時天氣、股市大盤走向與 QR Code 小工具。",
+  description: "公司附近吃什麼、即時天氣、股市大盤走向、QR Code、模型比較與貼文產生器。",
 };
 
 const navItems = [
@@ -25,6 +25,7 @@ const navItems = [
   { href: "/stock", label: "股市大盤走向" },
   { href: "/qrcode", label: "QR Code" },
   { href: "/compare", label: "模型比較" },
+  { href: "/copywriter", label: "貼文產生器" },
 ];
 
 export default function RootLayout({

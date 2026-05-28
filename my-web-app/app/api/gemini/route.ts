@@ -37,7 +37,7 @@ export async function POST(request: Request) {
 
   try {
     const client = new GoogleGenerativeAI(apiKey);
-    const model = client.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = client.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
     const response = await model.generateContent(prompt);
     const result = response.response.text().trim();
 
