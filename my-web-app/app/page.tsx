@@ -25,6 +25,12 @@ const apps = [
     title: "QR Code",
     description: "輸入網址或文字，產生可下載的 QR Code，也能放上 Logo。",
   },
+  {
+    href: "/compare",
+    emoji: "⇆",
+    title: "模型比較",
+    description: "同一個 prompt 同時送給 OpenAI 與 Gemini，比較回覆內容與回應時間。",
+  },
 ];
 
 export default function Home() {
@@ -40,7 +46,7 @@ export default function Home() {
           </h1>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
           {apps.map((app) => (
             <Link
               key={app.href}

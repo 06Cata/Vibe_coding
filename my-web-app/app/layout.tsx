@@ -24,6 +24,7 @@ const navItems = [
   { href: "/weather", label: "即時天氣" },
   { href: "/stock", label: "股市大盤走向" },
   { href: "/qrcode", label: "QR Code" },
+  { href: "/compare", label: "模型比較" },
 ];
 
 export default function RootLayout({
