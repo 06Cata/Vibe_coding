@@ -37,6 +37,30 @@ const apps = [
     title: "貼文產生器",
     description: "輸入服務、推廣重點與風格，快速產出台灣小商家的社群貼文。",
   },
+  {
+    href: "/image-gen",
+    emoji: "🖼️",
+    title: "圖片生成器",
+    description: "輸入 prompt 與風格，生成 AI 圖片並可直接下載。",
+  },
+  {
+    href: "/image-edit",
+    emoji: "🪄",
+    title: "圖片編輯器",
+    description: "上傳商品圖、輸入修改需求，產出新圖片或取得 AI 編輯建議。",
+  },
+  {
+    href: "/assistant",
+    emoji: "🤖",
+    title: "AI 助理",
+    description: "像聊天一樣詢問時間、天氣或圖片生成需求，讓 AI 自動調用工具完成任務。",
+  },
+  {
+    href: "/n8n-advisor",
+    emoji: "🔗",
+    title: "n8n 自動化顧問",
+    description: "描述你的業務流程，讓 AI 幫你規劃適合台灣小商家的 n8n 自動化方案。",
+  },
 ];
 
 export default function Home() {
@@ -52,7 +76,7 @@ export default function Home() {
           </h1>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-6">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-7">
           {apps.map((app) => (
             <Link
               key={app.href}
