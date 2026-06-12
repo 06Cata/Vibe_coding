@@ -220,6 +220,10 @@ export async function POST(request: Request) {
     ];
 
     for (const toolCall of assistantMessage.tool_calls) {
+      if (toolCall.type !== "function") {
+        continue;
+      }
+
       const args = JSON.parse(toolCall.function.arguments || "{}") as Record<string, unknown>;
       let toolResult = "";
 
