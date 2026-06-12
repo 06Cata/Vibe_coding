@@ -90,6 +90,7 @@ export async function POST(request: Request) {
               {
                 type: "input_image",
                 image_url: imageBase64,
+                detail: "auto",
               },
             ],
           },
