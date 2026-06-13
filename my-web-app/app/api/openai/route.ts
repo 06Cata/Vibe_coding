@@ -1,11 +1,27 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
+import { getSafeServerErrorMessage } from "@/lib/security/error-messages";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 
 type RequestBody = {
   prompt?: unknown;
 };
 
 export async function POST(request: Request) {
+  const rateLimit = checkRateLimit(request, "openai-route", 20, 60_000);
+
+  if (!rateLimit.ok) {
+    return NextResponse.json(
+      { error: "請求過於頻繁，請稍後再試。" },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(rateLimit.retryAfterSeconds ?? 60),
+        },
+      },
+    );
+  }
+
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
@@ -56,7 +72,7 @@ export async function POST(request: Request) {
     console.error("OpenAI API error:", error);
 
     return NextResponse.json(
-      { error: "Failed to get AI response." },
+      { error: getSafeServerErrorMessage(error, "Failed to get AI response.") },
       { status: 500 },
     );
   }

@@ -1,5 +1,7 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
+import { getSafeServerErrorMessage } from "@/lib/security/error-messages";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 
 type RequestBody = {
   prompt?: unknown;
@@ -92,6 +94,20 @@ async function generateImage(client: OpenAI, prompt: string) {
 }
 
 export async function POST(request: Request) {
+  const rateLimit = checkRateLimit(request, "assistant-route", 15, 60_000);
+
+  if (!rateLimit.ok) {
+    return NextResponse.json(
+      { error: "請求過於頻繁，請稍後再試。" },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(rateLimit.retryAfterSeconds ?? 60),
+        },
+      },
+    );
+  }
+
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
@@ -272,10 +288,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Failed to get assistant response.",
+        error: getSafeServerErrorMessage(error, "Failed to get assistant response."),
       },
       { status: 500 },
     );

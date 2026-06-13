@@ -1,5 +1,7 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
+import { getSafeServerErrorMessage } from "@/lib/security/error-messages";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 
 type RequestBody = {
   prompt?: unknown;
@@ -66,6 +68,20 @@ function parseSections(text: string): AdvisorSections {
 }
 
 export async function POST(request: Request) {
+  const rateLimit = checkRateLimit(request, "n8n-advisor-route", 20, 60_000);
+
+  if (!rateLimit.ok) {
+    return NextResponse.json(
+      { error: "請求過於頻繁，請稍後再試。" },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(rateLimit.retryAfterSeconds ?? 60),
+        },
+      },
+    );
+  }
+
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
@@ -122,7 +138,7 @@ export async function POST(request: Request) {
     console.error("n8n advisor API error:", error);
 
     return NextResponse.json(
-      { error: "Failed to get n8n advisor response." },
+      { error: getSafeServerErrorMessage(error, "Failed to get n8n advisor response.") },
       { status: 500 },
     );
   }

@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "fetch": {
+      "command": "/Users/catalinakuo/.langflow/uv/uvx",
+      "args": ["mcp-server-fetch"]
+    },
+    "filesystem": {
+      "command": "/opt/homebrew/bin/npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/catalinakuo/Downloads/for_git/Vibe_coding/my-web-app"
+      ]
+    },
+    "git": {
+      "command": "/Users/catalinakuo/.langflow/uv/uvx",
+      "args": [
+        "mcp-server-git",
+        "--repository",
+        "/Users/catalinakuo/Downloads/for_git/Vibe_coding/my-web-app"
+      ]
+    }
+  }
+}

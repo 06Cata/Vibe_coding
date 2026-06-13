@@ -1,6 +1,9 @@
 import { GoogleGenerativeAI, Part } from "@google/generative-ai";
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
+import { imageDataUrlToFile, parseImageDataUrl } from "@/lib/security/data-url";
+import { getSafeServerErrorMessage } from "@/lib/security/error-messages";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 
 type StyleOption = "realistic" | "cartoon" | "minimalist" | "watercolor";
 type ProviderOption = "gpt" | "gemini";
@@ -58,16 +61,21 @@ function normalizeGeminiError(message: string) {
   };
 }
 
-async function dataUrlToFile(dataUrl: string, filename: string) {
-  const response = await fetch(dataUrl);
-  const blob = await response.blob();
-
-  return new File([blob], filename, {
-    type: blob.type || "image/png",
-  });
-}
-
 export async function POST(request: Request) {
+  const rateLimit = checkRateLimit(request, "image-gen-route", 10, 60_000);
+
+  if (!rateLimit.ok) {
+    return NextResponse.json(
+      { error: "請求過於頻繁，請稍後再試。" },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(rateLimit.retryAfterSeconds ?? 60),
+        },
+      },
+    );
+  }
+
   let body: RequestBody;
 
   try {
@@ -115,6 +123,24 @@ export async function POST(request: Request) {
     );
   }
 
+  const [widthText, heightText] = size.split("x", 2);
+  const width = Number.parseInt(widthText, 10);
+  const height = Number.parseInt(heightText, 10);
+
+  if (
+    !Number.isFinite(width) ||
+    !Number.isFinite(height) ||
+    width <= 0 ||
+    height <= 0 ||
+    width > 2048 ||
+    height > 2048
+  ) {
+    return NextResponse.json(
+      { error: "圖片尺寸不可超過 2048x2048。" },
+      { status: 400 },
+    );
+  }
+
   try {
     const styledPrompt = `${STYLE_PREFIXES[style as StyleOption]} ${prompt}`;
     let imageUrl = "";
@@ -133,7 +159,7 @@ export async function POST(request: Request) {
       const response = productImage
         ? await client.images.edit({
             model: "gpt-image-1",
-            image: await dataUrlToFile(productImage, "product-image.png"),
+            image: imageDataUrlToFile(productImage, "product-image.png"),
             prompt: `${styledPrompt} Keep the uploaded product as the primary subject and preserve its key design details.`,
             size,
             quality: "medium",
@@ -174,20 +200,12 @@ export async function POST(request: Request) {
       const parts: Part[] = [{ text: `${styledPrompt}. Target image size: ${size}.` }];
 
       if (productImage) {
-        const [header, base64] = productImage.split(",", 2);
-        const mimeMatch = header?.match(/^data:(.+);base64$/);
-
-        if (!base64 || !mimeMatch?.[1]) {
-          return NextResponse.json(
-            { error: "Invalid product image format." },
-            { status: 400 },
-          );
-        }
+        const parsedProductImage = parseImageDataUrl(productImage);
 
         parts.push({
           inlineData: {
-            mimeType: mimeMatch[1],
-            data: base64,
+            mimeType: parsedProductImage.mimeType,
+            data: parsedProductImage.base64,
           },
         });
       }
@@ -225,7 +243,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      { error: message },
+      { error: getSafeServerErrorMessage(error, "Failed to generate image.") },
       { status: 500 },
     );
   }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/client";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 
 type HistoryRow = {
   id: string;
@@ -24,6 +25,22 @@ type DeleteHistoryBody = {
 };
 
 const TABLE = "copywriter_history";
+
+function isBrowserOriginAllowed(request: Request) {
+  const origin = request.headers.get("origin");
+  const host = request.headers.get("host");
+
+  if (!origin || !host) {
+    return true;
+  }
+
+  try {
+    const originUrl = new URL(origin);
+    return originUrl.host === host;
+  } catch {
+    return false;
+  }
+}
 
 export async function GET() {
   try {
@@ -59,6 +76,24 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!isBrowserOriginAllowed(request)) {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+  }
+
+  const rateLimit = checkRateLimit(request, "copywriter-history-post", 10, 60_000);
+
+  if (!rateLimit.ok) {
+    return NextResponse.json(
+      { error: "請求過於頻繁，請稍後再試。" },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(rateLimit.retryAfterSeconds ?? 60),
+        },
+      },
+    );
+  }
+
   let body: CreateHistoryBody;
 
   try {
@@ -129,6 +164,24 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  if (!isBrowserOriginAllowed(request)) {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+  }
+
+  const rateLimit = checkRateLimit(request, "copywriter-history-delete", 10, 60_000);
+
+  if (!rateLimit.ok) {
+    return NextResponse.json(
+      { error: "請求過於頻繁，請稍後再試。" },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(rateLimit.retryAfterSeconds ?? 60),
+        },
+      },
+    );
+  }
+
   let body: DeleteHistoryBody;
 
   try {

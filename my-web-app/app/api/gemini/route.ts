@@ -1,11 +1,27 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
+import { getSafeServerErrorMessage } from "@/lib/security/error-messages";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 
 type RequestBody = {
   prompt?: unknown;
 };
 
 export async function POST(request: Request) {
+  const rateLimit = checkRateLimit(request, "gemini-route", 20, 60_000);
+
+  if (!rateLimit.ok) {
+    return NextResponse.json(
+      { error: "請求過於頻繁，請稍後再試。" },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(rateLimit.retryAfterSeconds ?? 60),
+        },
+      },
+    );
+  }
+
   const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
@@ -52,11 +68,8 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Gemini API error:", error);
 
-    const message =
-      error instanceof Error ? error.message : "Failed to get Gemini response.";
-
     return NextResponse.json(
-      { error: message },
+      { error: getSafeServerErrorMessage(error, "Failed to get Gemini response.") },
       { status: 500 },
     );
   }

@@ -1,5 +1,8 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
+import { imageDataUrlToFile } from "@/lib/security/data-url";
+import { getSafeServerErrorMessage } from "@/lib/security/error-messages";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 
 type RequestBody = {
   imageBase64?: unknown;
@@ -24,16 +27,21 @@ function shouldAnalyze(editPrompt: string) {
   );
 }
 
-async function dataUrlToFile(dataUrl: string, filename: string) {
-  const response = await fetch(dataUrl);
-  const blob = await response.blob();
-
-  return new File([blob], filename, {
-    type: blob.type || "image/png",
-  });
-}
-
 export async function POST(request: Request) {
+  const rateLimit = checkRateLimit(request, "image-edit-route", 10, 60_000);
+
+  if (!rateLimit.ok) {
+    return NextResponse.json(
+      { error: "請求過於頻繁，請稍後再試。" },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(rateLimit.retryAfterSeconds ?? 60),
+        },
+      },
+    );
+  }
+
   let body: RequestBody;
 
   try {
@@ -111,7 +119,7 @@ export async function POST(request: Request) {
 
     const editedImage = await client.images.edit({
       model: "gpt-image-1",
-      image: await dataUrlToFile(imageBase64, "image-to-edit.png"),
+      image: imageDataUrlToFile(imageBase64, "image-to-edit.png"),
       prompt: editPrompt,
       size: "1024x1024",
       quality: "medium",
@@ -135,10 +143,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Failed to process image editing request.",
+        error: getSafeServerErrorMessage(error, "Failed to process image editing request."),
       },
       { status: 500 },
     );
