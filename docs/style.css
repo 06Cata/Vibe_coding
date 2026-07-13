@@ -422,8 +422,9 @@ blockquote {
 }
 
 .cta-note {
-  margin: 22.4px auto 14px;
+  margin: 23.4px auto 16px;
   color: var(--muted);
+  font-size: 0.70rem;
 }
 
 .cta-actions {
@@ -453,7 +454,7 @@ blockquote {
 
 .form-container {
   margin-top: 25.6px;
-  padding: 28px;
+  padding: 30px;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.06);
@@ -467,6 +468,7 @@ blockquote {
   margin: 0 auto 20px;
   max-width: 620px;
   color: var(--muted);
+  font-size: 0.85rem;
 }
 
 .form-button {
@@ -643,7 +645,7 @@ blockquote {
     min-height: auto;
     grid-template-columns: 1fr;
     width: 100%;
-    padding: 48px 14px 62px;
+    padding: 48px max(14px, calc((100% - 1120px) / 2)) 62px;
   }
 
   .workflow-panel {
@@ -658,7 +660,6 @@ blockquote {
     grid-template-columns: 1fr;
   }
 
-  .workflow-grid,
   .service-grid {
     grid-template-columns: 1fr;
   }
