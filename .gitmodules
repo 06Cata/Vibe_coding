@@ -1,0 +1,3 @@
+[submodule "aws-quiz-bank"]
+	path = aws-quiz-bank
+	url = https://github.com/06Cata/aws-quiz-bank
