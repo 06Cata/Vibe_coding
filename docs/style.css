@@ -144,7 +144,7 @@ p {
 h1 {
   max-width: 760px;
   margin-bottom: 24px;
-  font-size: clamp(2.3rem, 6.2vw, 5.2rem);
+  font-size: clamp(1.9rem, 5vw, 4.2rem);
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: 0;
@@ -168,7 +168,7 @@ h3 {
   max-width: 620px;
   margin-bottom: 34px;
   color: var(--muted);
-  font-size: clamp(1.0rem, 2.4vw, 1.5rem);
+  font-size: clamp(0.82rem, 1.7vw, 1.1rem);
 }
 
 .button {
@@ -421,8 +421,8 @@ blockquote {
   font-size: 1.12rem;
 }
 
-.cta-note {
-  margin: 23.4px auto 16px;
+.cta .cta-note {
+  margin: 32px auto 16px;
   color: var(--muted);
   font-size: 0.70rem;
 }
@@ -653,7 +653,7 @@ blockquote {
   }
 
   h1 {
-    font-size: clamp(2.12rem, 11.2vw, 3.6rem);
+    font-size: clamp(1.8rem, 9vw, 3rem);
   }
 
   .about-layout {

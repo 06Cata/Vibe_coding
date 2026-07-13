@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Anthropic News Carousel</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+--bg:#F5F1E8;
+--green:#1F2A24;
+--olive:#5E6B4E;
+--orange:#D98C4A;
+--white:#ffffff;
+--text:#222;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Noto Sans TC',sans-serif;
+background:#111;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:40px;
+}
+
+.carousel-container{
+position:relative;
+width:400px;
+height:500px;
+overflow:hidden;
+border-radius:24px;
+box-shadow:0 30px 80px rgba(0,0,0,.45);
+background:white;
+}
+
+.slides{
+display:flex;
+width:700%;
+height:100%;
+transition:.5s;
+}
+
+.slide{
+width:400px;
+height:500px;
+flex-shrink:0;
+position:relative;
+overflow:hidden;
+}
+
+.brand{
+position:absolute;
+top:18px;
+left:20px;
+font-size:12px;
+font-weight:600;
+letter-spacing:1px;
+z-index:10;
+}
+
+.footer{
+position:absolute;
+bottom:16px;
+left:20px;
+right:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:11px;
+font-weight:700;
+z-index:10;
+}
+
+.progress{
+position:absolute;
+bottom:42px;
+left:20px;
+width:360px;
+height:4px;
+background:rgba(255,255,255,.2);
+border-radius:10px;
+overflow:hidden;
+}
+
+.progress span{
+display:block;
+height:100%;
+background:var(--orange);
+}
+
+.page{
+position:absolute;
+bottom:48px;
+right:20px;
+font-size:12px;
+font-weight:700;
+}
+
+.arrow{
+position:absolute;
+right:18px;
+top:50%;
+transform:translateY(-50%);
+font-size:24px;
+opacity:.7;
+}
+
+.cover{
+background:
+linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),
+url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3');
+background-size:cover;
+background-position:center;
+color:white;
+padding:70px 30px;
+}
+
+.cover h1{
+font-family:'Cormorant Garamond',serif;
+font-size:58px;
+line-height:0.95;
+font-weight:700;
+margin-top:40px;
+}
+
+.cover .tag{
+font-size:13px;
+letter-spacing:3px;
+margin-bottom:15px;
+opacity:.8;
+}
+
+.cover .subtitle{
+margin-top:18px;
+font-size:15px;
+line-height:1.7;
+max-width:280px;
+}
+
+.beige{
+background:var(--bg);
+color:var(--text);
+padding:70px 30px;
+}
+
+.beige h2{
+font-size:42px;
+line-height:1.1;
+font-weight:900;
+margin-bottom:24px;
+}
+
+.beige p{
+font-size:22px;
+line-height:1.6;
+}
+
+.card{
+margin-top:25px;
+background:white;
+padding:20px;
+border-radius:18px;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.green{
+background:var(--green);
+color:white;
+padding:70px 30px;
+}
+
+.green h2{
+font-size:44px;
+line-height:1.1;
+font-weight:900;
+margin-bottom:24px;
+}
+
+.green p{
+font-size:22px;
+line-height:1.6;
+}
+
+.highlight{
+color:var(--orange);
+}
+
+.photo-page{
+background:
+linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45)),
+url('https://images.unsplash.com/photo-1555949963-aa79dcee981c');
+background-size:cover;
+background-position:center;
+color:white;
+padding:40px 24px;
+}
+
+.glass{
+position:absolute;
+bottom:90px;
+left:20px;
+right:20px;
+
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(16px);
+
+padding:24px;
+border-radius:20px;
+border:1px solid rgba(255,255,255,.15);
+}
+
+.glass h3{
+font-size:34px;
+margin-bottom:15px;
+}
+
+.glass p{
+font-size:18px;
+line-height:1.6;
+}
+
+.big-number{
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+background:var(--bg);
+}
+
+.big-number .num{
+font-size:120px;
+font-weight:900;
+color:var(--orange);
+line-height:1;
+}
+
+.big-number .txt{
+font-size:28px;
+font-weight:800;
+line-height:1.5;
+}
+
+.cta{
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.cta h2{
+font-size:42px;
+line-height:1.2;
+margin-bottom:25px;
+}
+
+.cta .keyword{
+font-size:72px;
+font-weight:900;
+color:var(--orange);
+}
+
+button{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+width:42px;
+height:42px;
+border:none;
+border-radius:50%;
+background:white;
+cursor:pointer;
+font-size:20px;
+box-shadow:0 8px 20px rgba(0,0,0,.15);
+z-index:20;
+}
+
+.prev{
+left:-60px;
+}
+
+.next{
+right:-60px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div style="position:relative">
+
+<button class="prev" onclick="prevSlide()">‹</button>
+
+<div class="carousel-container">
+
+<div class="slides" id="slides">
+
+<!-- PAGE 1 -->
+
+<div class="slide cover">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<div class="tag">AI 產業快訊｜2026.06</div>
+
+<h1>
+AI 強到<br>
+被政府<br>
+限制了？
+</h1>
+
+<div class="subtitle">
+這不是 AI 出問題<br>
+而是 AI 已經開始碰到<br>
+國家級風險
+</div>
+
+<div class="progress"><span style="width:14%"></span></div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+<div class="page">1/7</div>
+
+<div class="arrow">→</div>
+
+</div>
+
+<!-- PAGE 2 -->
+
+<div class="slide beige">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<h2>
+發生了<br>
+什麼事？
+</h2>
+
+<p>
+美國政府要求限制<br>
+Anthropic 最新模型
+</p>
+
+<div class="card">
+
+<p style="font-size:18px">
+
+✓ Fable 5<br><br>
+
+✓ Mythos 5<br><br>
+
+其他 Claude 模型<br>
+仍正常運作
+
+</p>
+
+</div>
+
+<div class="progress"><span style="width:28%"></span></div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+<div class="page">2/7</div>
+
+<div class="arrow">→</div>
+
+</div>
+
+<!-- PAGE 3 -->
+
+<div class="slide photo-page">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<div class="glass">
+
+<h3>
+為什麼被管制？
+</h3>
+
+<p>
+
+因為 AI 已經不只是聊天工具。
+
+開始能閱讀大型程式、
+分析漏洞、
+協助修補系統。
+
+</p>
+
+</div>
+
+<div class="progress"><span style="width:42%"></span></div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+<div class="page">3/7</div>
+
+<div class="arrow">→</div>
+
+</div>
+
+<!-- PAGE 4 -->
+
+<div class="slide green">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<h2>
+AI 競爭<br>
+升級了
+</h2>
+
+<p>
+
+內容生成
+
+↓<br><br>
+
+工作執行
+
+↓<br><br>
+
+<span class="highlight">
+國家競爭力
+</span>
+
+</p>
+
+<div class="progress"><span style="width:57%"></span></div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+<div class="page">4/7</div>
+
+<div class="arrow">→</div>
+
+</div>
+
+<!-- PAGE 5 -->
+
+<div class="slide big-number">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<div class="num">
+AI
+</div>
+
+<div class="txt">
+
+從工具
+
+→
+
+數位同事
+
+</div>
+
+<div class="progress"><span style="width:71%"></span></div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+<div class="page">5/7</div>
+
+<div class="arrow">→</div>
+
+</div>
+
+<!-- PAGE 6 -->
+
+<div class="slide beige">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<h2>
+真正值得<br>
+注意的是
+</h2>
+
+<div class="card">
+
+<p style="font-size:20px">
+
+當政府開始管理 AI
+
+代表它已經不是玩具。
+
+而是像：
+
+網際網路
+
+雲端
+
+半導體
+
+一樣的重要技術。
+
+</p>
+
+</div>
+
+<div class="progress"><span style="width:85%"></span></div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+<div class="page">6/7</div>
+
+<div class="arrow">→</div>
+
+</div>
+
+<!-- PAGE 7 -->
+
+<div class="slide green cta">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<h2>
+
+我整理了完整事件
+
+時間線＋影響分析
+
+</h2>
+
+<div class="keyword">
+整理
+</div>
+
+<p style="margin-top:25px;font-size:22px;">
+留言關鍵字領取
+</p>
+
+<div class="progress"><span style="width:100%"></span></div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+<div class="page">7/7</div>
+
+</div>
+
+</div>
+
+</div>
+
+<button class="next" onclick="nextSlide()">›</button>
+
+</div>
+
+<script>
+
+let current=0;
+const slides=document.getElementById('slides');
+
+function update(){
+slides.style.transform=`translateX(-${current*400}px)`;
+}
+
+function nextSlide(){
+if(current<6){
+current++;
+update();
+}
+}
+
+function prevSlide(){
+if(current>0){
+current--;
+update();
+}
+}
+
+document.addEventListener('keydown',(e)=>{
+if(e.key==="ArrowRight") nextSlide();
+if(e.key==="ArrowLeft") prevSlide();
+});
+
+</script>
+
+</body>
+</html>

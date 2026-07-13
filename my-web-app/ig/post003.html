@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GPT Image2 找出你的風格</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:#111;
+font-family:'Noto Sans TC',sans-serif;
+padding:40px;
+}
+
+.container{
+max-width:460px;
+margin:auto;
+}
+
+.slide{
+width:400px;
+height:500px;
+margin:30px auto;
+border-radius:24px;
+overflow:hidden;
+position:relative;
+background:#F5F1E8;
+box-shadow:0 20px 50px rgba(0,0,0,.35);
+}
+
+.brand{
+position:absolute;
+top:20px;
+left:24px;
+font-size:12px;
+font-weight:700;
+letter-spacing:1px;
+opacity:.85;
+z-index:20;
+}
+
+.footer{
+position:absolute;
+bottom:20px;
+left:24px;
+right:24px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:11px;
+font-weight:700;
+letter-spacing:1px;
+z-index:20;
+}
+
+.progress{
+position:absolute;
+bottom:52px;
+left:24px;
+width:120px;
+height:4px;
+background:rgba(0,0,0,.1);
+border-radius:999px;
+overflow:hidden;
+}
+
+.progress span{
+display:block;
+height:100%;
+background:#D98C4A;
+}
+
+.page{
+position:absolute;
+right:24px;
+bottom:48px;
+font-size:12px;
+font-weight:700;
+}
+
+.cover{
+
+background:
+linear-gradient(
+rgba(0,0,0,.42),
+rgba(0,0,0,.56)
+),
+radial-gradient(circle at 72% 28%,rgba(217,140,74,.72),transparent 22%),
+radial-gradient(circle at 30% 72%,rgba(245,241,232,.34),transparent 24%),
+linear-gradient(135deg,#1F2A24 0%,#111 54%,#6B3D22 100%);
+
+background-size:cover;
+background-position:center;
+color:white;
+padding:40px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+}
+
+.cover h1{
+font-size:40px;
+line-height:1.1;
+font-weight:600;
+margin-bottom:18px;
+}
+
+.cover p{
+font-size:18px;
+line-height:1.6;
+opacity:.9;
+}
+
+.badge{
+display:inline-block;
+padding:8px 16px;
+background:#D98C4A;
+border-radius:999px;
+font-size:12px;
+font-weight:700;
+margin-bottom:20px;
+width:max-content;
+}
+
+.section{
+padding:48px 30px;
+height:100%;
+}
+
+.section h2{
+font-size:32px;
+margin-bottom:16px;
+color:#1F2A24;
+}
+
+.section p{
+line-height:1.8;
+color:#444;
+}
+
+.grid4{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:8px;
+margin-top:20px;
+}
+
+.grid5{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:8px;
+margin-top:16px;
+}
+
+.card{
+background:white;
+border-radius:14px;
+overflow:hidden;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.card img,
+.visual{
+width:100%;
+height:100px;
+object-fit:cover;
+}
+
+.visual{
+position:relative;
+overflow:hidden;
+background:#eee;
+}
+
+.palette{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:5px;
+padding:10px;
+}
+
+.palette span{
+border-radius:10px;
+box-shadow:inset 0 0 0 1px rgba(255,255,255,.45);
+}
+
+.soft-summer{background:#EDE8E2}
+.soft-summer span:nth-child(1){background:#CFA7A8}
+.soft-summer span:nth-child(2){background:#AFC0B1}
+.soft-summer span:nth-child(3){background:#B8CAD8}
+.soft-summer span:nth-child(4){background:#B6A8A1}
+
+.light-spring{background:#FFF3DC}
+.light-spring span:nth-child(1){background:#F3A17F}
+.light-spring span:nth-child(2){background:#F7D77A}
+.light-spring span:nth-child(3){background:#A8DCC3}
+.light-spring span:nth-child(4){background:#F7C4B8}
+
+.warm-autumn{background:#EFE1CF}
+.warm-autumn span:nth-child(1){background:#A85F32}
+.warm-autumn span:nth-child(2){background:#C98C42}
+.warm-autumn span:nth-child(3){background:#6E7A42}
+.warm-autumn span:nth-child(4){background:#7B3F2A}
+
+.deep-winter{background:#E8E8E8}
+.deep-winter span:nth-child(1){background:#111111}
+.deep-winter span:nth-child(2){background:#F7F7F7}
+.deep-winter span:nth-child(3){background:#8B1230}
+.deep-winter span:nth-child(4){background:#1D3557}
+
+.hair{
+background:linear-gradient(160deg,#F3E7D8,#D7C2B2);
+}
+
+.hair:before{
+content:"";
+position:absolute;
+left:50%;
+bottom:6px;
+width:44px;
+height:52px;
+border-radius:48% 48% 42% 42%;
+background:#F1C8A7;
+transform:translateX(-50%);
+box-shadow:0 12px 0 rgba(31,42,36,.08);
+}
+
+.hair:after{
+content:"";
+position:absolute;
+left:50%;
+top:12px;
+transform:translateX(-50%);
+}
+
+.hair-layered:after{
+width:82px;
+height:82px;
+border-radius:42px 42px 30px 30px;
+background:
+linear-gradient(105deg,transparent 0 42%,rgba(255,255,255,.18) 43% 45%,transparent 46%),
+linear-gradient(145deg,#4A2C20 0 50%,transparent 51%),
+linear-gradient(215deg,#6A3F2B 0 54%,transparent 55%),
+#5A3426;
+clip-path:polygon(14% 0,86% 0,96% 62%,76% 96%,62% 74%,50% 100%,38% 74%,24% 96%,4% 62%);
+}
+
+.hair-medium:after{
+width:76px;
+height:72px;
+border-radius:38px 38px 18px 18px;
+background:
+linear-gradient(90deg,transparent 0 48%,rgba(255,255,255,.16) 49% 51%,transparent 52%),
+#3B2A23;
+clip-path:polygon(12% 0,88% 0,96% 88%,70% 78%,52% 96%,30% 78%,4% 88%);
+}
+
+.hair-curly:after{
+width:72px;
+height:76px;
+border-radius:50%;
+background:
+radial-gradient(circle at 20% 28%,#3B2419 0 12px,transparent 13px),
+radial-gradient(circle at 38% 18%,#5A3426 0 13px,transparent 14px),
+radial-gradient(circle at 58% 20%,#3B2419 0 14px,transparent 15px),
+radial-gradient(circle at 76% 34%,#5A3426 0 12px,transparent 13px),
+radial-gradient(circle at 30% 55%,#6A3F2B 0 14px,transparent 15px),
+radial-gradient(circle at 64% 58%,#3B2419 0 15px,transparent 16px);
+}
+
+.hair-bangs:after{
+width:78px;
+height:66px;
+border-radius:38px 38px 24px 24px;
+background:
+linear-gradient(105deg,transparent 0 42%,rgba(255,255,255,.18) 43% 45%,transparent 46%),
+linear-gradient(160deg,#1F1715 0 48%,transparent 49%),
+linear-gradient(200deg,#2B211C 0 52%,transparent 53%),
+#30201A;
+clip-path:polygon(8% 0,92% 0,100% 82%,68% 70%,54% 98%,42% 70%,10% 82%);
+}
+
+.hair-pony:after{
+width:86px;
+height:70px;
+background:
+radial-gradient(ellipse at 42% 42%,#7A523A 0 31px,transparent 32px),
+radial-gradient(ellipse at 84% 50%,#7A523A 0 26px,transparent 27px);
+filter:drop-shadow(0 6px 8px rgba(0,0,0,.18));
+}
+
+.outfit{
+background:linear-gradient(180deg,#F7F4EF,#E4DDD2);
+}
+
+.outfit:before{
+content:"";
+position:absolute;
+left:50%;
+top:18px;
+width:46px;
+height:72px;
+border-radius:24px 24px 10px 10px;
+transform:translateX(-50%);
+box-shadow:0 8px 18px rgba(31,42,36,.12);
+}
+
+.outfit-korean:before{
+background:linear-gradient(180deg,#F4D9D2 0 40%,#D8E5E0 41% 100%);
+}
+
+.outfit-korean:after{
+content:"";
+position:absolute;
+left:24px;
+top:20px;
+width:22px;
+height:64px;
+border-radius:999px;
+background:#F8F2E8;
+box-shadow:44px 0 0 #B9A38F;
+}
+
+.outfit-minimal:before{
+background:linear-gradient(180deg,#EFE8DD 0 42%,#F8F7F2 43% 100%);
+}
+
+.outfit-minimal:after{
+content:"";
+position:absolute;
+left:26px;
+top:22px;
+width:16px;
+height:62px;
+border-radius:12px;
+background:#B8A895;
+box-shadow:46px 0 0 #D8D0C6;
+}
+
+.outfit-office:before{
+background:linear-gradient(180deg,#F7F7F2 0 36%,#2B302C 37% 100%);
+}
+
+.outfit-office:after{
+content:"";
+position:absolute;
+left:22px;
+top:24px;
+width:18px;
+height:58px;
+border-radius:999px;
+background:#1F2A24;
+box-shadow:48px 0 0 #D98C4A;
+}
+
+.outfit-japan:before{
+background:linear-gradient(180deg,#FFFFFF 0 38%,#1F2A24 39% 100%);
+}
+
+.outfit-japan:after{
+content:"";
+position:absolute;
+right:18px;
+top:26px;
+width:22px;
+height:44px;
+border-radius:999px;
+background:#B38355;
+box-shadow:-58px 6px 0 #2F4050;
+}
+
+.label{
+padding:8px;
+font-size:11px;
+text-align:center;
+font-weight:700;
+}
+
+.green{
+background:#1F2A24;
+color:white;
+}
+
+.green h2{
+color:white;
+}
+
+.green p{
+color:#e5e5e5;
+}
+
+.big-number{
+font-size:90px;
+font-weight:900;
+line-height:1;
+color:#D98C4A;
+}
+
+.compare{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:30px;
+}
+
+.compare-box{
+width:45%;
+text-align:center;
+}
+
+.compare-box h3{
+font-size:18px;
+margin-bottom:12px;
+}
+
+.compare-box p{
+font-size:14px;
+}
+
+.arrow{
+font-size:40px;
+color:#D98C4A;
+font-weight:900;
+}
+
+.blur-box{
+margin-top:30px;
+height:230px;
+border-radius:20px;
+background:
+linear-gradient(
+rgba(255,255,255,.2),
+rgba(255,255,255,.2)
+);
+backdrop-filter:blur(12px);
+border:1px solid rgba(255,255,255,.2);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+font-weight:900;
+color:#333;
+}
+
+.cta{
+display:flex;
+height:100%;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:40px;
+}
+
+.cta h2{
+font-size:40px;
+margin-bottom:18px;
+}
+
+.keyword{
+margin-top:18px;
+font-size:42px;
+font-weight:900;
+color:#D98C4A;
+}
+
+.small{
+font-size:14px;
+line-height:1.8;
+}
+
+.arrow-next{
+position:absolute;
+right:18px;
+top:50%;
+transform:translateY(-50%);
+font-size:28px;
+opacity:.4;
+}
+
+.corner-image{
+position:absolute;
+right:20px;
+bottom:80px;
+width:120px;
+height:120px;
+border-radius:12px;
+object-fit:cover;
+box-shadow:0 5px 20px rgba(0,0,0,.15);
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- PAGE 1 -->
+
+<div class="slide cover">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<div class="badge">GPT Image2</div>
+
+<h1>
+上傳一張照片<br>
+AI 幫你找出<br>
+適合的風格
+</h1>
+
+<p>
+以前找形象顧問要幾千元<br>
+現在幾分鐘就能做到
+</p>
+
+<div class="progress"><span style="width:14%"></span></div>
+<div class="page">1/7</div>
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+<div class="arrow-next">→</div>
+
+</div>
+
+<!-- PAGE 2 -->
+
+<div class="slide">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<div class="section">
+
+<h2>個人色彩分析</h2>
+
+<p>
+直接模擬不同顏色穿在你身上的效果
+</p>
+
+<div class="grid4">
+
+<div class="card">
+<div class="visual palette soft-summer" aria-label="柔夏低飽和色票">
+<span></span><span></span><span></span><span></span>
+</div>
+<div class="label">柔夏</div>
+</div>
+
+<div class="card">
+<div class="visual palette light-spring" aria-label="柔春明亮色票">
+<span></span><span></span><span></span><span></span>
+</div>
+<div class="label">柔春</div>
+</div>
+
+<div class="card">
+<div class="visual palette warm-autumn" aria-label="暖秋暖色色票">
+<span></span><span></span><span></span><span></span>
+</div>
+<div class="label">暖秋</div>
+</div>
+
+<div class="card">
+<div class="visual palette deep-winter" aria-label="深冬高對比色票">
+<span></span><span></span><span></span><span></span>
+</div>
+<div class="label">深冬</div>
+</div>
+
+</div>
+
+<p style="margin-top:20px">
+✓ 適合色<br>
+✓ 地雷色<br>
+✓ 氣色差異<br>
+✓ 16型色彩分析
+</p>
+
+</div>
+
+<img src="color1.png" alt="color1" class="corner-image">
+
+<div class="progress"><span style="width:28%"></span></div>
+<div class="page">2/7</div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 3 -->
+
+<div class="slide">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<div class="section">
+
+<h2>個人髮型分析</h2>
+
+<p>一次模擬多種髮型</p>
+
+<div class="grid5">
+
+<div class="card"><div class="visual hair hair-layered" aria-label="層次長髮示意"></div><div class="label">層次長髮</div></div>
+<div class="card"><div class="visual hair hair-medium" aria-label="中長髮示意"></div><div class="label">中長髮</div></div>
+<div class="card"><div class="visual hair hair-curly" aria-label="捲髮示意"></div><div class="label">捲髮</div></div>
+<div class="card"><div class="visual hair hair-bangs" aria-label="瀏海示意"></div><div class="label">瀏海</div></div>
+<div class="card"><div class="visual hair hair-pony" aria-label="綁髮示意"></div><div class="label">綁髮</div></div>
+
+</div>
+
+<p style="margin-top:22px">
+不用真的剪頭髮<br>
+先看效果再決定
+</p>
+
+</div>
+
+<img src="color2.png" alt="color2" class="corner-image">
+
+<div class="progress"><span style="width:42%"></span></div>
+<div class="page">3/7</div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 4 -->
+
+<div class="slide">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<div class="section">
+
+<h2>個人穿搭分析</h2>
+
+<p>
+直接生成穿搭顧問報告
+</p>
+
+<div class="grid4">
+
+<div class="card">
+<div class="visual outfit outfit-korean" aria-label="韓系穿搭示意"></div>
+<div class="label">韓系</div>
+</div>
+
+<div class="card">
+<div class="visual outfit outfit-minimal" aria-label="極簡穿搭示意"></div>
+<div class="label">極簡</div>
+</div>
+
+<div class="card">
+<div class="visual outfit outfit-office" aria-label="OL穿搭示意"></div>
+<div class="label">OL</div>
+</div>
+
+<div class="card">
+<div class="visual outfit outfit-japan" aria-label="日系穿搭示意"></div>
+<div class="label">日系</div>
+</div>
+
+</div>
+
+<p style="margin-top:20px">
+✓ 適合版型<br>
+✓ 顏色建議<br>
+✓ 品牌推薦
+</p>
+
+</div>
+
+<img src="color3.png" alt="color3" class="corner-image">
+
+<div class="progress"><span style="width:57%"></span></div>
+<div class="page">4/7</div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 5 -->
+
+<div class="slide green">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<div class="section">
+
+<h2>以前 VS 現在</h2>
+
+<div class="compare">
+
+<div class="compare-box">
+<h3>以前</h3>
+<p>
+找顧問<br>
+等待分析<br>
+幾天到數週
+</p>
+</div>
+
+<div class="arrow">→</div>
+
+<div class="compare-box">
+<h3>現在</h3>
+<p>
+上傳照片<br>
+貼 Prompt<br>
+3分鐘完成
+</p>
+</div>
+
+</div>
+
+<div style="margin-top:40px">
+
+<div class="big-number">3</div>
+
+<p>
+分鐘產出分析圖
+</p>
+
+</div>
+
+</div>
+
+<div class="progress"><span style="width:71%"></span></div>
+<div class="page">5/7</div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 6 -->
+
+<div class="slide">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<div class="section">
+
+<h2>三組神 Prompt</h2>
+
+<p>
+色彩分析<br>
+髮型分析<br>
+穿搭分析
+</p>
+
+<div class="blur-box">
+留言解鎖
+</div>
+
+</div>
+
+<div class="progress"><span style="width:85%"></span></div>
+<div class="page">6/7</div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 7 -->
+
+<div class="slide">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<div class="cta">
+
+<h2>
+我整理好了
+</h2>
+
+<p class="small">
+完整 Prompt<br>
+直接複製就能玩
+</p>
+
+<div class="keyword">
+風格
+</div>
+
+<p style="margin-top:16px">
+留言領取
+</p>
+
+</div>
+
+<div class="progress"><span style="width:100%"></span></div>
+<div class="page">7/7</div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

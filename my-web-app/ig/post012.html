@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>颱風假我做了一個 AWS 刷題網站｜GPT-5.5 vs GPT-5.6 Sol</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--cream:#F5F1E8;--green:#1F2A24;--orange:#D98C4A;--blue:#4F7FDB;--yellow:#E6B84A;--ink:#111814;--muted:#6F766E}
+body{min-height:100vh;background:#111;font-family:'Noto Sans TC',sans-serif;color:var(--ink);display:flex;align-items:center;justify-content:center;padding:30px 14px}
+.preview{width:430px;max-width:100%}.frame{width:430px;max-width:100%;padding:14px;border-radius:34px;background:#050505;box-shadow:0 24px 80px rgba(0,0,0,.55)}
+.track{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;border-radius:28px}.track::-webkit-scrollbar{display:none}
+.slide{position:relative;flex:0 0 400px;width:400px;height:500px;overflow:hidden;border-radius:24px;scroll-snap-align:center;padding:22px 24px 126px;background:var(--cream)}
+.brand{position:absolute;top:20px;left:24px;font-size:12px;font-weight:800;z-index:8;color:inherit;opacity:.82}
+.footer{position:absolute;left:24px;right:24px;bottom:16px;display:flex;justify-content:space-between;font-size:11px;font-weight:900;letter-spacing:.14em;z-index:8;color:inherit;opacity:.78}
+.progress{position:absolute;left:24px;bottom:54px;width:118px;height:3px;background:rgba(120,120,120,.22);border-radius:999px;overflow:hidden;z-index:8}.progress span{display:block;height:100%;background:var(--orange);border-radius:999px}
+.page{position:absolute;right:24px;bottom:50px;font-size:12px;font-weight:900;z-index:8;color:inherit;opacity:.78}.nextmark{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:26px;font-weight:900;color:inherit;opacity:.34;z-index:8}
+.kicker{display:inline-flex;align-items:center;margin-top:48px;padding:7px 12px;border-radius:999px;background:var(--orange);color:#fff;font-size:12px;font-weight:900;letter-spacing:.12em;box-shadow:0 12px 28px rgba(217,140,74,.24)}
+h1{font-size:37px;font-weight:900;line-height:1.08;letter-spacing:0}h2{font-size:31px;font-weight:900;line-height:1.12;letter-spacing:0}p{font-size:17px;font-weight:800;line-height:1.5}.accent{color:var(--orange)}.blue{color:var(--blue)}.yellow{color:var(--yellow)}
+.cover{color:#F8F4EA;background:radial-gradient(circle at 74% 18%,rgba(79,127,219,.42),transparent 24%),radial-gradient(circle at 22% 78%,rgba(217,140,74,.32),transparent 30%),linear-gradient(160deg,#071018 0%,#17201b 48%,#050505 100%)}
+.cover:before{content:"";position:absolute;inset:-40px;background:repeating-linear-gradient(112deg,rgba(255,255,255,.10) 0 1px,transparent 1px 24px);opacity:.28;transform:rotate(-8deg)}
+.cover .inner{position:relative;z-index:2;max-width:330px}.cover h1{margin-top:12px;font-size:24px;line-height:1.04;text-shadow:0 5px 30px rgba(0,0,0,.55)}.cover h1 .accent{font-size:28px;line-height:1.02}.cover .sub{position:absolute;right:8px;top:28px;width:156px;padding:11px 12px 12px 15px;border-radius:18px 18px 6px 18px;text-align:left;color:rgba(248,244,234,.92);font-size:12px;line-height:1.34;font-weight:900;text-shadow:0 3px 16px rgba(0,0,0,.65);z-index:3;background:rgba(5,5,5,.34);border:1px solid rgba(245,241,232,.16);box-shadow:0 16px 34px rgba(0,0,0,.26);backdrop-filter:blur(10px)}
+.cover .sub:before{content:"";position:absolute;left:10px;top:12px;width:5px;height:5px;border-radius:50%;background:var(--orange);box-shadow:8px 0 0 rgba(245,241,232,.45),16px 0 0 rgba(79,127,219,.8)}
+.cover .sub:after{content:"";position:absolute;right:14px;bottom:-7px;width:14px;height:14px;background:rgba(5,5,5,.34);border-right:1px solid rgba(245,241,232,.16);border-bottom:1px solid rgba(245,241,232,.16);transform:rotate(45deg)}
+.cover .sub b{display:block;padding-top:10px;font-size:12px;line-height:1.25}.cover .sub span{display:block;margin-top:5px;font-size:11px;line-height:1.3;color:rgba(248,244,234,.82)}
+.cover-shot{position:absolute;left:26px;right:26px;bottom:78px;height:178px;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.16);box-shadow:0 22px 54px rgba(0,0,0,.38);z-index:1;opacity:.72}
+.cover-shot img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.cover-shot:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,5,5,.05),rgba(5,5,5,.18))}
+.tool-row{display:flex;gap:7px;margin-top:12px;align-items:center}.tool-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:999px;background:rgba(245,241,232,.92);color:var(--green);font-size:11px;font-weight:900;box-shadow:0 12px 28px rgba(0,0,0,.22)}.tool-icon{width:18px;height:18px;border-radius:8px;display:grid;place-items:center;color:#fff;font-size:12px;font-weight:900;background:linear-gradient(135deg,#E6B84A,#D98C4A)}.tool-icon.ai{background:linear-gradient(135deg,#4F7FDB,#6D7AE8)}
+.dark{background:var(--green);color:#F5F1E8}.dark .lead{color:rgba(245,241,232,.82)}.dark .card{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12);color:#F5F1E8}.dark .model-card{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.13)}
+.cream h2,.dark h2,.compare-slide h2{margin-top:32px}.lead{margin-top:14px;color:#354039}
+.big-line{margin-top:18px;font-size:24px;line-height:1.28;font-weight:900}.small-note{margin-top:12px;font-size:15px;line-height:1.4;font-weight:800;color:inherit;opacity:.78}
+.card{margin-top:18px;padding:17px;border-radius:20px;background:#fff;border:1px solid rgba(31,42,36,.10);box-shadow:0 14px 32px rgba(31,42,36,.08)}.card p{font-size:18px;line-height:1.38}
+.model-grid{display:grid;gap:10px;margin-top:18px}.model-card{padding:13px 14px;border-radius:18px;background:#fff;border:1px solid rgba(31,42,36,.10);box-shadow:0 12px 26px rgba(31,42,36,.08)}
+.model-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}.dot{width:13px;height:13px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px rgba(217,140,74,.16)}.dot.green{background:#40B36A;box-shadow:0 0 0 4px rgba(64,179,106,.16)}.dot.blue{background:var(--blue);box-shadow:0 0 0 4px rgba(79,127,219,.16)}.dot.yellow{background:var(--yellow);box-shadow:0 0 0 4px rgba(230,184,74,.18)}
+.model-title{font-size:18px;font-weight:900}.model-card span{display:block;font-size:14px;font-weight:800;line-height:1.35;color:inherit;opacity:.82}
+.flow{display:grid;gap:9px;margin-top:18px}.flow-card{padding:12px 14px;border-radius:17px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}.flow-card b{display:block;font-size:17px;margin-bottom:6px}.check{display:block;font-size:15px;font-weight:850;line-height:1.38;color:rgba(245,241,232,.86)}.arrow{font-size:22px;line-height:1;text-align:center;color:var(--orange);font-weight:900}
+.choice-list{display:grid;gap:9px;margin-top:18px}.choice{display:grid;grid-template-columns:18px 1fr;gap:9px;align-items:start;padding:11px 13px;border-radius:17px;background:#fff;border:1px solid rgba(31,42,36,.10);box-shadow:0 12px 26px rgba(31,42,36,.08)}.choice b{display:block;font-size:16px;line-height:1.2}.choice span{display:block;margin-top:3px;font-size:13px;line-height:1.3;font-weight:800;color:#4A554D}
+.compact .kicker{margin-top:38px;padding:6px 11px;font-size:11px}.compact h2{margin-top:22px;font-size:28px;line-height:1.08}.compact .lead{margin-top:12px}.compact .card{margin-top:14px;padding:15px}.compact .model-grid{gap:8px;margin-top:14px}.compact .model-card{padding:11px 13px;border-radius:16px}.compact .model-title{font-size:16px}.compact .model-card span{font-size:13px;line-height:1.28}
+.workflow-slide .flow{grid-template-columns:1fr 24px 1fr;align-items:center;gap:8px;margin-top:16px}.workflow-slide .flow-card{min-height:152px;padding:10px 10px;border-radius:16px}.workflow-slide .flow-card b{font-size:15px;margin-bottom:8px}.workflow-slide .check{font-size:13px;line-height:1.45}.workflow-slide .arrow{font-size:22px}
+.rule-slide h2{font-size:27px}.rule-slide .model-grid{gap:7px;margin-top:14px}.rule-slide .model-card{padding:9px 11px;border-radius:15px}.rule-slide .model-head{gap:7px;margin-bottom:4px}.rule-slide .dot{width:11px;height:11px}.rule-slide .model-title{font-size:14px}.rule-slide .model-card span{font-size:12px;line-height:1.24}
+	.compare-slide{background:linear-gradient(180deg,#F5F1E8,#EFE6D6)}.compare-slide h2{font-size:26px;margin-top:20px}.table{margin-top:12px;display:grid;gap:5px}.row{display:grid;grid-template-columns:1.08fr .72fr .55fr .35fr;gap:4px;align-items:center;padding:6px 8px;border-radius:12px;background:#fff;border:1px solid rgba(31,42,36,.08);box-shadow:0 8px 18px rgba(31,42,36,.06);font-size:9px;font-weight:900}.row.head{background:var(--green);color:#F5F1E8;box-shadow:none}.stars{letter-spacing:-.08em;color:var(--orange)}.price{font-size:11px;color:var(--green)}
+	.final-note{margin-top:9px;padding:10px 13px;border-radius:16px;background:var(--green);color:#F5F1E8;font-size:15px;line-height:1.25;font-weight:900}
+	.routing-list{display:grid;gap:7px;margin-top:14px}.routing-item{display:grid;grid-template-columns:12px 84px 1fr;gap:7px;align-items:center;padding:8px 10px;border-radius:14px;background:#fff;border:1px solid rgba(31,42,36,.10);box-shadow:0 8px 18px rgba(31,42,36,.06)}.routing-item .dot{width:10px;height:10px;box-shadow:none}.routing-item b{font-size:12px;line-height:1.15}.routing-item span{font-size:10px;line-height:1.25;font-weight:900;color:#526057}.routing-note{margin-top:10px;padding:9px 11px;border-radius:14px;background:rgba(217,140,74,.13);color:#71431F;font-size:12px;line-height:1.3;font-weight:900}.scenario-list{display:grid;gap:7px;margin-top:14px}.scenario{display:grid;grid-template-columns:1fr auto;gap:9px;align-items:center;padding:9px 11px;border-radius:14px;background:#fff;border:1px solid rgba(31,42,36,.10);box-shadow:0 8px 18px rgba(31,42,36,.06)}.scenario span{font-size:11px;line-height:1.25;font-weight:900}.scenario b{font-size:11px;line-height:1.2;color:#AF5D22;text-align:right}.scenario-note{margin-top:9px;font-size:11px;line-height:1.28;font-weight:900;color:#526057}.strength-list{display:grid;gap:7px;margin-top:14px}.strength-item{display:grid;grid-template-columns:14px 1fr;gap:8px;align-items:center;padding:8px 10px;border-radius:14px;background:#fff;border:1px solid rgba(31,42,36,.10);box-shadow:0 8px 18px rgba(31,42,36,.06)}.strength-item b{display:block;font-size:13px;line-height:1.15}.strength-item span{display:block;margin-top:2px;font-size:11px;line-height:1.2;font-weight:800;color:#526057}.strength-item .dot{width:10px;height:10px;box-shadow:none}.strength-note{margin-top:9px;font-size:12px;line-height:1.3;font-weight:900;color:#526057}.availability{margin-top:13px;display:grid;gap:6px}.availability .row{grid-template-columns:1.14fr repeat(5,.42fr);gap:3px;padding:8px 7px;font-size:10px;text-align:center}.availability .row span:first-child{text-align:left}.availability .row.head{font-size:9px}.yes{color:#247B49;font-size:14px;line-height:1}.no{color:#B7B0A4;font-size:12px;line-height:1}.availability-note{margin-top:9px;font-size:11px;line-height:1.25;font-weight:900;color:#526057}
+	.level-slide .kicker{margin-top:34px}.level-slide h2{margin-top:14px;font-size:25px}.level-slide .strength-list{gap:5px;margin-top:10px}.level-slide .strength-item{padding:6px 10px}.level-slide .strength-item b{font-size:12px}.level-slide .strength-item span{font-size:10px;line-height:1.15}.level-slide .strength-note{margin-top:7px;font-size:11px}
+.compare-slide .kicker{margin-top:28px!important}
+.compare-slide h2{margin-top:16px!important}
+.compare-slide .availability{margin-top:10px}
+.compare-slide .row{padding:6px 7px!important}
+.controls{display:flex;justify-content:center;gap:10px;margin-top:14px}button{border:0;border-radius:999px;background:#F5F1E8;color:#111;padding:10px 18px;font-weight:900;cursor:pointer}
+@media(max-width:460px){body{padding:12px 0}.preview,.frame{width:100%}.slide{flex-basis:400px}.controls{margin-bottom:10px}}
+</style>
+<style>
+.slide[style*="padding-top:8px"] .kicker,.slide[style*="padding-top:6px"] .kicker{margin-top:18px!important}
+.slide[style*="padding-top:8px"] h2,.slide[style*="padding-top:6px"] h2{margin-top:10px!important}
+</style>
+
+<style>
+.slide.dark.compact .kicker{margin-top:52px!important}
+.slide.compare-slide .kicker{margin-top:52px!important}
+</style>
+
+</head>
+<body>
+<div class="preview">
+  <div class="frame">
+    <main class="track" id="track">
+      <section class="slide cover">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="inner">
+          <div class="kicker">AI MODEL TEST</div>
+          <div class="tool-row">
+            <span class="tool-badge"><span class="tool-icon">☁</span>AWS</span>
+            <span class="tool-badge"><span class="tool-icon ai">AI</span>GPT</span>
+          </div>
+          <h1>GPT 5.6 Sol 模型實測<br>我找到<br><span class="accent">選擇模型 × 強度的方法了</span></h1>
+        </div>
+        <p class="sub"><b>颱風假</b><span>我 Vibe Coding 了一個<br>AWS 刷題網站<br>實際開發心得</span></p>
+        <div class="cover-shot"><img src="aws-test-bank.png" alt="AWS 刷題網站畫面"></div>
+        <div class="progress"><span style="width:14.28%"></span></div><div class="page">1/7</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide cream compact">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="kicker">FINDING 01</div>
+        <h2>我實測後的<br>第一個感想</h2>
+        <p class="lead">GPT-5.6 Sol<br>真的比較聰明一點</p>
+        <div class="card"><p>但 GPT-5.5<br>其實也很夠用</p></div>
+        <p class="small-note">差別不是不能用，而是「要不要花在這一步」。</p>
+        <div class="progress"><span style="width:28.56%"></span></div><div class="page">2/7</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide dark compact" style="padding-top:8px;">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="kicker">FINDING 02</div>
+        <h2>我最大的發現</h2>
+        <div class="big-line">不用每件事<br>都開最強模型</div>
+        <div class="model-grid">
+<div class="model-card"><div class="model-head"><span class="dot green"></span><div class="model-title">GPT-5.5</div></div><span>上一代全能，日常也很夠用</span></div>
+<div class="model-card"><div class="model-head"><span class="dot blue"></span><div class="model-title">GPT-5.6 Terra</div></div><span>平衡首選，日常工作預設</span></div>
+<div class="model-card"><div class="model-head"><span class="dot yellow"></span><div class="model-title">GPT-5.6 Sol</div></div><span>品質最高，適合推理與架構</span></div>
+</div><div class="progress"><span style="width:42.84%"></span></div><div class="page">3/7</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide dark compact workflow-slide">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="kicker">WORKFLOW</div>
+        <h2>我的開發流程</h2>
+        <div class="flow">
+          <div class="flow-card">
+            <b><span class="yellow">GPT-5.6 Sol</span></b>
+            <span class="check">✔ 規劃架構</span>
+            <span class="check">✔ 拆解需求</span>
+            <span class="check">✔ 找 Bug</span>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="flow-card">
+            <b><span class="accent">GPT-5.5 / Terra</span></b>
+            <span class="check">✔ 實作功能</span>
+            <span class="check">✔ 修改程式</span>
+            <span class="check">✔ 反覆迭代</span>
+          </div>
+        </div>
+        <div class="progress"><span style="width:57.12%"></span></div><div class="page">4/7</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide cream compact">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="kicker">MODEL × THINKING</div>
+        <h2>第一步：<br>先選模型</h2>
+        <div class="routing-list">
+          <div class="routing-item"><span class="dot green"></span><b>GPT-5.5</b><span>既有流程、預算考量，任務定義清楚</span></div>
+          <div class="routing-item"><span class="dot blue"></span><b>5.6 Luna</b><span>大量、重複、格式固定，先求速度</span></div>
+          <div class="routing-item"><span class="dot green"></span><b>5.6 Terra</b><span>日常開發預設：功能、SQL、自動化</span></div>
+          <div class="routing-item"><span class="dot yellow"></span><b>5.6 Sol</b><span>需求模糊、架構取捨、品質優先</span></div>
+        </div>
+        <p class="routing-note">先看任務要速度、平衡，還是最高品質。</p>
+        <div class="progress"><span style="width:71.4%"></span></div><div class="page">5/7</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide cream compact level-slide">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="kicker">THINKING LEVEL</div>
+        <h2>第二步：選強度</h2>
+        <div class="strength-list">
+          <div class="strength-item"><span class="dot blue"></span><div><b>Light｜快</b><span>摘要、改寫、格式整理</span></div></div>
+          <div class="strength-item"><span class="dot green"></span><div><b>Medium｜日常</b><span>一般問答、小幅修改</span></div></div>
+          <div class="strength-item"><span class="dot"></span><div><b>High｜多想幾步</b><span>除錯、SQL、需求拆解</span></div></div>
+          <div class="strength-item"><span class="dot yellow"></span><div><b>Extra High｜複雜</b><span>架構設計、Agent、重構</span></div></div>
+          <div class="strength-item"><span class="dot yellow"></span><div><b>Ultra｜真的卡關</b><span>重要決策、反覆驗證</span></div></div>
+        </div>
+        <p class="strength-note">越往上，通常越慢、也越花資源。</p>
+        <div class="progress"><span style="width:85.68%"></span></div><div class="page">6/7</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide compare-slide compact" style="padding-top:6px;">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="kicker">CHEAT SHEET</div>
+        <h2>全部強度<br>一次看懂</h2>
+        <div class="availability">
+          <div class="row head"><span>模型</span><span>L</span><span>M</span><span>H</span><span>XH</span><span>U</span></div>
+          <div class="row"><span>GPT-5.5</span><span class="yes">●</span><span class="yes">●</span><span class="yes">●</span><span class="yes">●</span><span class="no">—</span></div>
+          <div class="row"><span>5.6 Luna</span><span class="yes">●</span><span class="yes">●</span><span class="yes">●</span><span class="yes">●</span><span class="no">—</span></div>
+          <div class="row"><span>5.6 Terra</span><span class="yes">●</span><span class="yes">●</span><span class="yes">●</span><span class="yes">●</span><span class="yes">●</span></div>
+          <div class="row"><span>5.6 Sol</span><span class="yes">●</span><span class="yes">●</span><span class="yes">●</span><span class="yes">●</span><span class="yes">●</span></div>
+        </div>
+        <p class="availability-note">L Light · M Medium · H High · XH Extra High · U Ultra</p>
+        <div class="final-note">先選模型，再選剛好的強度</div>
+        <div class="progress"><span style="width:100%"></span></div><div class="page">7/7</div><div class="footer"><span>SHARE</span><span>SAVE</span></div>
+      </section>
+    </main>
+  </div>
+  <div class="controls"><button onclick="go(-1)">上一張</button><button onclick="go(1)">下一張</button></div>
+</div>
+<script>
+const track = document.getElementById('track');
+let index = 0;
+const total = document.querySelectorAll('.slide').length;
+const step = 422;
+function go(delta){
+  index = Math.max(0, Math.min(total - 1, index + delta));
+  track.scrollTo({left:index * step, behavior:'smooth'});
+}
+track.addEventListener('scroll',()=>{index=Math.round(track.scrollLeft / step);});
+document.addEventListener('keydown',(event)=>{
+  if(event.key==='ArrowRight')go(1);
+  if(event.key==='ArrowLeft')go(-1);
+});
+</script>
+</body>
+</html>

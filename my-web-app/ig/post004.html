@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adobe MCP 輪播｜Catalina</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#111;font-family:'Noto Sans TC',sans-serif;padding:34px;color:#1F2A24}
+.stage{max-width:440px;margin:auto}
+.phone-hint{color:#aaa;text-align:center;font-size:12px;margin-bottom:14px;letter-spacing:.08em}
+.carousel{width:400px;height:500px;margin:0 auto 28px;position:relative;overflow:hidden;border-radius:24px;box-shadow:0 24px 70px rgba(0,0,0,.5)}
+.track{display:flex;width:700%;height:100%;transition:transform .45s cubic-bezier(.22,.8,.22,1)}
+.slide{width:400px;height:500px;flex:0 0 400px;position:relative;overflow:hidden;padding:28px 28px 72px;border-radius:24px}
+.cover{color:#F5F1E8;background:linear-gradient(rgba(0,0,0,.44),rgba(0,0,0,.58)),url('Catalina.jpg');background-size:cover;background-position:center}
+.cover:after,.photo:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 82% 24%,rgba(217,140,74,.36),transparent 28%),linear-gradient(130deg,transparent 30%,rgba(31,42,36,.7) 100%);pointer-events:none}
+.beige{background:#F5F1E8;color:#1F2A24}
+.green{background:#1F2A24;color:#F5F1E8}
+.photo{color:#F5F1E8;background:linear-gradient(rgba(20,35,28,.45),rgba(20,35,28,.68)),url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80');background-size:cover;background-position:center}
+.photo2{background:linear-gradient(rgba(20,35,28,.38),rgba(20,35,28,.72)),url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80');background-size:cover;background-position:center}
+.brand{position:absolute;top:20px;left:24px;font-size:11px;letter-spacing:.04em;font-weight:700;z-index:3;opacity:.9}
+.page{position:absolute;top:20px;right:24px;font-size:11px;font-weight:700;z-index:3;opacity:.82}
+.title{position:relative;z-index:2;font-size:40px;line-height:1.05;font-weight:900;letter-spacing:-.05em;margin-top:48px}
+.title.serif{font-family:'Playfair Display','Noto Sans TC',serif;letter-spacing:-.04em}
+.title .accent,.accent{color:#D98C4A}
+.subtitle{position:relative;z-index:2;margin-top:18px;font-size:17px;line-height:1.55;font-weight:600;color:inherit;opacity:.94}
+.kicker{position:relative;z-index:2;font-size:13px;font-weight:600;letter-spacing:.12em;color:#D98C4A;margin-top:52px;text-transform:uppercase}
+.kicker + .title{margin-top:38px}
+.card{position:relative;z-index:2;margin-top:20px;border-radius:20px;padding:18px;background:rgba(255,255,255,.62);border:1px solid rgba(31,42,36,.1);box-shadow:0 18px 48px rgba(31,42,36,.12)}
+.green .card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13)}
+.glass{position:relative;z-index:2;margin-top:230px;background:rgba(20,35,28,.56);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.15);border-radius:22px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.bigline{font-size:28px;line-height:1.25;font-weight:900;letter-spacing:-.04em}
+.note{margin-top:10px;font-size:15px;line-height:1.6;font-weight:600;opacity:.88}
+.rows{position:relative;z-index:2;margin-top:28px;display:grid;gap:12px}
+.row{display:flex;align-items:center;gap:12px;background:rgba(94,107,78,.14);border:1px solid rgba(31,42,36,.08);border-radius:16px;padding:13px 14px;font-size:16px;font-weight:800}
+.num{display:grid;place-items:center;width:30px;height:30px;border-radius:10px;background:#1F2A24;color:#F5F1E8;font-size:14px;flex:0 0 auto}
+.green .num{background:#D98C4A;color:#1F2A24}
+.badges{position:relative;z-index:2;display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.badge{height:34px;min-width:34px;border-radius:10px;background:#171717;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;box-shadow:0 10px 26px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.12)}
+.badge.claude{background:#2b211c;color:#F5D0B5;min-width:80px;gap:6px}.badge.claude:before{content:"✦";color:#D98C4A}.badge.adobe{background:#3b1511;color:#ffb2a5;min-width:74px}.badge.ps{color:#7fd5ff}.badge.ai{color:#ffb24a}.badge.id{color:#ff80c9}.badge.ex{color:#a4ffcf}
+.flow{position:relative;z-index:2;margin-top:22px;display:grid;grid-template-columns:1fr;gap:10px}
+.flow-item{background:rgba(245,241,232,.1);border:1px solid rgba(245,241,232,.14);border-radius:16px;padding:12px 14px;font-weight:800;font-size:15px;display:flex;justify-content:space-between;align-items:center}.flow-item span{color:#D98C4A}
+.compare{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px}.box{border-radius:18px;padding:18px 14px;min-height:134px;background:rgba(255,255,255,.65);box-shadow:0 16px 40px rgba(0,0,0,.1)}.box.dark{background:#1F2A24;color:#F5F1E8}.label{font-size:12px;font-weight:900;color:#D98C4A;margin-bottom:14px}.box p{font-size:18px;line-height:1.35;font-weight:900;letter-spacing:-.03em}
+.quote{position:relative;z-index:2;margin-top:76px;padding:26px 22px;border-left:5px solid #D98C4A;background:rgba(245,241,232,.08);border-radius:0 22px 22px 0;font-size:28px;line-height:1.35;font-weight:900;letter-spacing:-.05em}
+.ctaBox{position:relative;z-index:2;margin-top:28px;background:#F5F1E8;color:#1F2A24;border-radius:24px;padding:22px 20px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.22)}
+.keyword{display:inline-block;margin-top:14px;background:#D98C4A;color:#1F2A24;border-radius:999px;padding:10px 28px;font-size:22px;font-weight:900;letter-spacing:.08em}
+.footer{position:absolute;left:24px;right:24px;bottom:22px;z-index:5;display:flex;align-items:center;gap:10px;color:inherit;font-size:10px;font-weight:900;letter-spacing:.12em;opacity:.9}.progress{height:3px;flex:1;background:rgba(128,128,128,.32);border-radius:99px;overflow:hidden}.bar{height:100%;background:#D98C4A;border-radius:99px}.save{margin-left:auto}.arrow{position:absolute;right:18px;top:50%;z-index:4;width:34px;height:34px;border-radius:50%;background:rgba(245,241,232,.18);display:grid;place-items:center;color:inherit;font-size:24px;backdrop-filter:blur(10px)}
+.controls{display:flex;justify-content:center;gap:12px}.btn{border:0;background:#F5F1E8;color:#1F2A24;border-radius:999px;padding:10px 18px;font-weight:800;cursor:pointer}.btn:hover{background:#D98C4A}.mini{font-size:12px;opacity:.78;margin-top:12px;text-align:center;color:#bbb}.screen{position:relative;z-index:2;margin-top:24px;border-radius:22px;background:#171717;padding:16px;border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 50px rgba(0,0,0,.2)}.prompt{background:#2b2b2b;border-radius:15px;padding:14px;color:#F5F1E8;font-size:14px;line-height:1.5;font-weight:600}.result{margin-top:10px;display:flex;gap:8px}.thumb{height:58px;flex:1;border-radius:12px;background:linear-gradient(135deg,#68523d,#1F2A24)}.thumb:nth-child(2){background:linear-gradient(135deg,#D98C4A,#3b1511)}.thumb:nth-child(3){background:linear-gradient(135deg,#5E6B4E,#F5F1E8)}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="phone-hint">← 左右滑動預覽 →</div>
+  <div class="carousel" id="carousel">
+    <div class="track" id="track">
+      <section class="slide cover">
+        <div class="brand">@catalina.ai.workflow</div><div class="page">1/7</div>
+        <div class="badges" style="margin-top:36px"><div class="badge claude">Claude</div><div class="badge adobe">Adobe</div></div>
+        <h1 class="title serif">Claude<br>不只是<br><span class="accent">聊天了</span></h1>
+        <p class="subtitle">現在開始<br>可以直接操作 Adobe</p>
+        <div class="arrow">›</div><div class="footer"><span>SHARE</span><div class="progress"><div class="bar" style="width:14.28%"></div></div><span>1/7</span><span class="save">SAVE</span></div>
+      </section>
+      <section class="slide photo">
+        <div class="brand">@catalina.ai.workflow</div><div class="page">2/7</div>
+        <div class="glass"><div class="bigline">以前你要<br>一直切工具</div><div class="note">Claude 問完<br>還要自己開 Adobe</div></div>
+        <div class="arrow">›</div><div class="footer"><span>SHARE</span><div class="progress"><div class="bar" style="width:28.56%"></div></div><span>2/7</span><span class="save">SAVE</span></div>
+      </section>
+      <section class="slide beige">
+        <div class="brand">@catalina.ai.workflow</div><div class="page">3/7</div>
+        <div class="kicker">Adobe MCP</div>
+        <h2 class="title">它是<br><span class="accent">工具橋樑</span></h2>
+        <p class="subtitle">讓 Claude<br>接上 Adobe 工具</p>
+        <div class="badges"><div class="badge claude">Claude</div><div class="badge ps">Ps</div><div class="badge ai">Ai</div></div>
+        <div class="card"><div class="note">你講需求<br>AI 開始串流程</div></div>
+        <div class="arrow">›</div><div class="footer"><span>SHARE</span><div class="progress"><div class="bar" style="width:42.84%"></div></div><span>3/7</span><span class="save">SAVE</span></div>
+      </section>
+      <section class="slide green">
+        <div class="brand">@catalina.ai.workflow</div><div class="page">4/7</div>
+        <div class="kicker">Use Case 01</div>
+        <h2 class="title">社群貼文<br><span class="accent">直接產出</span></h2>
+        <div class="flow"><div class="flow-item">寫文案 <span>→</span></div><div class="flow-item">生圖片 <span>→</span></div><div class="flow-item">丟進 Adobe <span>→</span></div></div>
+        <div class="badges"><div class="badge claude">Claude</div><div class="badge adobe">Adobe</div><div class="badge ex">Ex</div></div>
+        <div class="arrow">›</div><div class="footer"><span>SHARE</span><div class="progress"><div class="bar" style="width:57.12%"></div></div><span>4/7</span><span class="save">SAVE</span></div>
+      </section>
+      <section class="slide beige">
+        <div class="brand">@catalina.ai.workflow</div><div class="page">5/7</div>
+        <div class="kicker">Before / After</div>
+        <h2 class="title">商品圖<br><span class="accent">不用重修</span></h2>
+        <div class="compare"><div class="box"><div class="label">以前</div><p>自己修圖<br>自己排版</p></div><div class="box dark"><div class="label">現在</div><p>講需求<br>AI 幫你改</p></div></div>
+        <div class="badges"><div class="badge ps">Ps</div><div class="badge claude">Claude</div></div>
+        <div class="arrow">›</div><div class="footer"><span>SHARE</span><div class="progress"><div class="bar" style="width:71.4%"></div></div><span>5/7</span><span class="save">SAVE</span></div>
+      </section>
+      <section class="slide photo photo2">
+        <div class="brand">@catalina.ai.workflow</div><div class="page">6/7</div>
+        <div class="quote">重點不是<br><span class="accent">Prompt</span><br>是工作流</div>
+        <div class="glass" style="margin-top:26px"><div class="note">AI 不只給答案<br>開始交成果</div></div>
+        <div class="arrow">›</div><div class="footer"><span>SHARE</span><div class="progress"><div class="bar" style="width:85.68%"></div></div><span>6/7</span><span class="save">SAVE</span></div>
+      </section>
+      <section class="slide green">
+        <div class="brand">@catalina.ai.workflow</div><div class="page">7/7</div>
+        <div class="kicker">Get the Guide</div>
+        <h2 class="title">我整理了<br>Adobe Connector<br><span class="accent">應用案例</span></h2>
+        <div class="ctaBox"><div class="bigline">留言領取</div><div class="keyword">Adobe</div></div>
+        <div class="footer"><span>SHARE</span><div class="progress"><div class="bar" style="width:100%"></div></div><span>7/7</span><span class="save">SAVE</span></div>
+      </section>
+    </div>
+  </div>
+  <div class="controls"><button class="btn" onclick="prev()">上一張</button><button class="btn" onclick="next()">下一張</button></div>
+  <div class="mini">鍵盤 ← → 也可以切換</div>
+</div>
+<script>
+let current=0;const total=7;const track=document.getElementById('track');
+function update(){track.style.transform=`translateX(${-400*current}px)`}
+function next(){current=(current+1)%total;update()}
+function prev(){current=(current-1+total)%total;update()}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')prev()});
+let startX=0;const el=document.getElementById('carousel');
+el.addEventListener('touchstart',e=>startX=e.touches[0].clientX,{passive:true});
+el.addEventListener('touchend',e=>{let dx=e.changedTouches[0].clientX-startX;if(dx<-40)next();if(dx>40)prev()},{passive:true});
+</script>
+<!-- metadata
+封面標題：Claude 不只是聊天了
+封面副標：現在開始可以直接操作 Adobe
+封面圖片 Prompt：cinematic portrait of an AI workflow creator in a warm professional workspace, dark green and beige palette, editorial magazine cover, shallow depth of field, premium lighting, space for title overlay
+內頁圖片 Prompt：professional office worker using AI assistant with creative software on laptop, warm cinematic lighting, editorial magazine style, dark green and beige tone, shallow depth of field
+IG 文案：Adobe 把 Claude 接進 Adobe 生態系了。這次重點不是多一個工具，而是 AI 開始從「回答問題」變成「操作工具」。以前你問完 Claude，還要自己開 Photoshop、Illustrator、Express。現在你可以描述需求，讓 Claude 串接 Adobe 工作流程。未來真正重要的能力，可能不是背 Prompt，而是設計自己的工作流。留言「MCP」，我把 Adobe MCP 應用案例整理給你。
+Hashtags：#AI #Claude #Adobe #MCP #AI工具 #工作流 #自動化 #生產力 #CatalinaAI
+留言 CTA 關鍵字：MCP
+-->
+</body>
+</html>

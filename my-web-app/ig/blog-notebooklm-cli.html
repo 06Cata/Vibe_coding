@@ -1,0 +1,266 @@
+<style>
+  .notebooklm-post {
+    max-width: 860px;
+    margin: 0 auto;
+    color: #1f2a24;
+    font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    line-height: 1.85;
+  }
+
+  .notebooklm-post * {
+    box-sizing: border-box;
+  }
+
+  .notebooklm-hero {
+    margin: 28px 0;
+    padding: 40px 28px;
+    border-radius: 24px;
+    background:
+      radial-gradient(circle at 86% 18%, rgba(217, 140, 74, 0.2), transparent 32%),
+      linear-gradient(135deg, #f5f1e8 0%, #ffffff 100%);
+    border: 1px solid rgba(31, 42, 36, 0.08);
+    box-shadow: 0 18px 50px rgba(31, 42, 36, 0.08);
+  }
+
+  .notebooklm-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: #1f2a24;
+    color: #f5f1e8;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+  }
+
+  .notebooklm-hero h1 {
+    margin: 0 0 18px;
+    font-size: 34px;
+    line-height: 1.25;
+    color: #1f2a24;
+    letter-spacing: 0;
+  }
+
+  .notebooklm-hero p {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 650;
+    color: #455148;
+  }
+
+  .notebooklm-section {
+    margin: 34px 0;
+    padding: 28px;
+    border-radius: 22px;
+    background: #ffffff;
+    border: 1px solid rgba(31, 42, 36, 0.1);
+    box-shadow: 0 16px 42px rgba(31, 42, 36, 0.07);
+  }
+
+  .notebooklm-section h2 {
+    margin: 0 0 12px;
+    font-size: 26px;
+    line-height: 1.3;
+    color: #1f2a24;
+  }
+
+  .notebooklm-section p,
+  .notebooklm-section li {
+    font-size: 16px;
+    font-weight: 600;
+    color: #4f5a52;
+  }
+
+  .notebooklm-section p {
+    margin: 0 0 18px;
+  }
+
+  .notebooklm-section ul {
+    margin: 14px 0 0;
+    padding-left: 1.2em;
+  }
+
+  .notebooklm-link-card {
+    margin-top: 18px;
+    padding: 18px 20px;
+    border-left: 5px solid #d98c4a;
+    border-radius: 16px;
+    background: rgba(217, 140, 74, 0.09);
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .notebooklm-link-card a {
+    color: #1f2a24;
+    font-weight: 900;
+    word-break: break-word;
+  }
+
+  .notebooklm-code-title {
+    display: inline-flex;
+    margin: 20px 0 10px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #f5f1e8;
+    color: #5e6b4e;
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .notebooklm-code {
+    position: relative;
+    overflow-x: auto;
+    margin: 0 0 18px;
+    padding: 20px 22px;
+    border-radius: 18px;
+    background: #1f2a24;
+    color: #f8f4ea;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 16px 38px rgba(31, 42, 36, 0.12);
+  }
+
+  .notebooklm-code code {
+    display: block;
+    white-space: pre;
+    font-family: "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .notebooklm-note {
+    margin-top: 18px;
+    padding: 18px 20px;
+    border-radius: 18px;
+    background: #f5f1e8;
+    color: #29332c;
+    font-weight: 700;
+  }
+
+  .notebooklm-cta {
+    margin: 36px 0 20px;
+    padding: 28px;
+    border-radius: 24px;
+    background: #1f2a24;
+    color: #f8f4ea;
+  }
+
+  .notebooklm-cta h2 {
+    margin: 0 0 12px;
+    color: #f8f4ea;
+    font-size: 26px;
+  }
+
+  .notebooklm-cta p {
+    margin: 0;
+    color: rgba(248, 244, 234, 0.82);
+    font-weight: 700;
+  }
+
+  @media (max-width: 640px) {
+    .notebooklm-hero,
+    .notebooklm-section,
+    .notebooklm-cta {
+      padding: 24px 18px;
+      border-radius: 20px;
+    }
+
+    .notebooklm-hero h1 {
+      font-size: 28px;
+    }
+
+    .notebooklm-section h2,
+    .notebooklm-cta h2 {
+      font-size: 23px;
+    }
+
+    .notebooklm-code {
+      padding: 18px;
+    }
+
+    .notebooklm-code code {
+      font-size: 13px;
+    }
+  }
+</style>
+
+<article class="notebooklm-post">
+  <section class="notebooklm-hero">
+    <div class="notebooklm-kicker">NOTEBOOKLM CLI</div>
+    <h1>NotebookLM CLI 來了</h1>
+    <p>
+      以前整理資料要開網頁、上傳檔案、切來切去。
+      現在有人做成開源工具，可以直接在 Terminal 操作。
+    </p>
+  </section>
+
+  <section class="notebooklm-section">
+    <h2>這個工具可以做什麼？</h2>
+    <p>
+      串進 Python、建立一個 Notebook，就能丟網址、PDF、書的電子檔進去。
+      你可以把它想成：用指令建立一個可以提問的知識庫。
+    </p>
+    <ul>
+      <li>建立 Notebook</li>
+      <li>管理來源資料</li>
+      <li>針對來源提問</li>
+      <li>整理摘要與重點</li>
+    </ul>
+    <div class="notebooklm-link-card">
+      GitHub 連結：
+      <a href="https://github.com/teng-lin/notebooklm-py" target="_blank" rel="noopener noreferrer">
+        https://github.com/teng-lin/notebooklm-py
+      </a>
+    </div>
+  </section>
+
+  <section class="notebooklm-section">
+    <h2>安裝 NotebookLM CLI</h2>
+    <p>先安裝套件，再安裝 Playwright 的 Chromium 瀏覽器。</p>
+
+    <div class="notebooklm-code-title">Terminal</div>
+    <pre class="notebooklm-code"><code>pip install "notebooklm-py[browser]"
+playwright install chromium</code></pre>
+  </section>
+
+  <section class="notebooklm-section">
+    <h2>登入與確認狀態</h2>
+    <p>第一次使用需要登入，登入後可以用 auth check 確認是否成功。</p>
+
+    <div class="notebooklm-code-title">Terminal</div>
+    <pre class="notebooklm-code"><code>notebooklm login
+notebooklm auth check --test --json</code></pre>
+  </section>
+
+  <section class="notebooklm-section">
+    <h2>建立一個研究 Notebook</h2>
+    <p>建立 Notebook 後，記得切換到該 notebook_id，後面新增來源和提問才會放到同一個研究裡。</p>
+
+    <div class="notebooklm-code-title">Terminal</div>
+    <pre class="notebooklm-code"><code>notebooklm create "我的研究"
+notebooklm use &lt;notebook_id&gt;</code></pre>
+  </section>
+
+  <section class="notebooklm-section">
+    <h2>新增來源並提問</h2>
+    <p>你可以丟網址進去，再直接請它整理重點。</p>
+
+    <div class="notebooklm-code-title">Terminal</div>
+    <pre class="notebooklm-code"><code>notebooklm source add "https://en.wikipedia.org/wiki/Artificial_intelligence"
+notebooklm ask "請整理這個來源的重點，條列式列出"</code></pre>
+
+    <div class="notebooklm-note">
+      如果你平常會整理新聞、研究資料、會議紀錄，這個工具滿適合拿來玩看看。
+    </div>
+  </section>
+
+  <section class="notebooklm-cta">
+    <h2>留言「工具」</h2>
+    <p>
+      我傳 GitHub 連結與安裝程式碼給你。
+      如果安裝時遇到問題，也可以直接私訊我。
+    </p>
+  </section>
+</article>

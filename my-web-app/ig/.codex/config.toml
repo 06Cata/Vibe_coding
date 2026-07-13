@@ -1,0 +1,11 @@
+[mcp_servers.higgsfield]
+url = "https://mcp.higgsfield.ai/mcp"
+
+[mcp_servers.higgsfield.tools.media_upload_widget]
+approval_mode = "approve"
+
+[mcp_servers.higgsfield.tools.show_marketing_studio]
+approval_mode = "approve"
+
+[mcp_servers.higgsfield.tools.generate_video]
+approval_mode = "approve"

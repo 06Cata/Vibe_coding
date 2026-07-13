@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NotebookLM CLI 輪播</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:#111;
+font-family:'Noto Sans TC',sans-serif;
+padding:40px;
+}
+
+.container{
+max-width:430px;
+margin:auto;
+}
+
+.slide{
+width:400px;
+height:500px;
+margin:28px auto;
+border-radius:28px;
+overflow:hidden;
+position:relative;
+background:#F5F1E8;
+padding:24px;
+box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+.brand{
+font-size:12px;
+font-weight:700;
+color:#5E6B4E;
+margin-bottom:18px;
+}
+
+.page{
+position:absolute;
+right:24px;
+bottom:48px;
+font-size:12px;
+font-weight:700;
+color:#999;
+}
+
+.footer{
+position:absolute;
+left:24px;
+right:24px;
+bottom:20px;
+display:flex;
+justify-content:space-between;
+font-size:11px;
+font-weight:700;
+color:#777;
+}
+
+.progress{
+position:absolute;
+left:24px;
+right:24px;
+bottom:48px;
+height:4px;
+border-radius:20px;
+background:rgba(255,255,255,.15);
+}
+
+.progress span{
+display:block;
+height:100%;
+background:#5E6B4E;
+border-radius:20px;
+}
+
+h1{
+font-size:40px;
+line-height:1.1;
+font-weight:900;
+margin-bottom:14px;
+}
+
+h2{
+font-size:32px;
+line-height:1.15;
+font-weight:900;
+margin-bottom:16px;
+}
+
+p{
+font-size:18px;
+line-height:1.7;
+font-weight:500;
+}
+
+.dark{
+background:#1F2A24;
+color:white;
+}
+
+.dark .brand,
+.dark .page,
+.dark .footer{
+color:rgba(255,255,255,.75);
+}
+
+.cover{
+background:
+linear-gradient(
+rgba(0,0,0,.68),
+rgba(0,0,0,.60)
+),
+url("Catalina.jpg");
+background-size:cover;
+background-position:center;
+color:white;
+}
+
+.cover-desc{
+font-size:18px;
+font-weight:500;
+line-height:2.3;
+}
+
+.highlight{
+color:#D98C4A;
+}
+
+.terminal-window{
+width:100%;
+background:#050505;
+border-radius:24px;
+overflow:hidden;
+box-shadow:0 18px 40px rgba(0,0,0,.25);
+}
+
+.terminal-header{
+height:52px;
+background:#111;
+display:flex;
+align-items:center;
+padding:0 18px;
+gap:10px;
+}
+
+.dot{
+width:12px;
+height:12px;
+border-radius:50%;
+}
+
+.red{background:#ff5f57;}
+.yellow{background:#ffbd2e;}
+.green{background:#28c840;}
+
+.terminal-title{
+margin-left:8px;
+font-size:14px;
+font-weight:700;
+color:#BFC5CB;
+}
+
+.terminal-body{
+padding:24px;
+}
+
+.terminal-note{
+font-size:9px;
+font-weight:700;
+color:#7D8590;
+line-height:1.7;
+margin-bottom:14px;
+font-family:Menlo,Monaco,monospace;
+text-transform:none;
+letter-spacing:0;
+}
+
+.terminal-body{
+padding:20px 22px 22px;
+}
+
+.terminal-body pre{
+margin:0;
+white-space:pre-wrap;
+font-family:
+SFMono-Regular,
+Menlo,
+Monaco,
+Consolas,
+monospace;
+
+font-size:11px;
+line-height:1.75;
+color:white;
+font-weight:600;
+}
+
+.screenshot{
+width:100%;
+border-radius:18px;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,.18);
+margin-top:16px;
+}
+
+.screenshot img{
+width:100%;
+display:block;
+}
+
+.cta{
+display:flex;
+height:100%;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.cta h1{
+font-size:54px;
+margin-bottom:10px;
+}
+
+.cta p{
+font-size:22px;
+font-weight:700;
+}
+
+
+.notebooklm-badge{
+position:absolute;
+top:16px;
+right:16px;
+width:60px;
+height:60px;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.notebooklm-badge img{
+width:100%;
+height:100%;
+object-fit:contain;
+filter:none;
+background:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- PAGE 1 -->
+
+<div class="slide cover">
+
+<div class="brand">@catalina.ai.workflow</div>
+<div class="notebooklm-badge">
+    <img src="notebooklm-badge.png" alt="">
+</div>
+
+
+<h1>
+NotebookLM<br>
+CLI 來了
+</h1>
+
+<p class="cover-desc">
+建立知識庫<br>
+整理資料<br>
+終端機直接完成
+</p>
+
+<div class="progress"><span style="width:14%"></span></div>
+
+<div class="page">1/7</div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 2 -->
+
+<div class="slide">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<h2>
+NotebookLM<br>
+可以用指令操作了
+</h2>
+
+<p>
+建立研究<br>
+新增來源<br>
+直接提問
+</p>
+
+<div class="screenshot">
+<img src="notebooklm.png">
+</div>
+
+<div class="progress"><span style="width:28%"></span></div>
+
+<div class="page">2/7</div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 3 -->
+
+<div class="slide dark">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<h2>STEP 1<br>安裝</h2>
+
+<div class="terminal-window">
+<div class="terminal-header">
+<span class="dot red"></span>
+<span class="dot yellow"></span>
+<span class="dot green"></span>
+<span class="terminal-title">~/project/INSTALL.md</span>
+</div>
+
+<div class="terminal-body">
+<div class="terminal-note">
+# 安裝 NotebookLM CLI<br>
+# 第一次執行約需 30~90 秒
+</div>
+
+<pre>pip install "notebooklm-py[browser]"
+
+playwright install chromium</pre>
+</div>
+</div>
+
+<div class="progress"><span style="width:42%"></span></div>
+<div class="page">3/7</div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 4 -->
+
+<div class="slide">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<h2>STEP 2<br>登入驗證</h2>
+
+<div class="terminal-window">
+<div class="terminal-header">
+<span class="dot red"></span>
+<span class="dot yellow"></span>
+<span class="dot green"></span>
+<span class="terminal-title">~/project/AUTH.md</span>
+</div>
+
+<div class="terminal-body">
+<div class="terminal-note">
+# 使用 Google 帳號登入<br>
+# 驗證 NotebookLM 權限
+</div>
+
+<pre>notebooklm login
+
+notebooklm auth check --test --json</pre>
+</div>
+</div>
+
+<div class="progress"><span style="width:57%"></span></div>
+<div class="page">4/7</div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 5 -->
+
+<div class="slide dark">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<h2>STEP 3<br>建立研究</h2>
+
+<div class="terminal-window">
+<div class="terminal-header">
+<span class="dot red"></span>
+<span class="dot yellow"></span>
+<span class="dot green"></span>
+<span class="terminal-title">~/project/NOTEBOOK.md</span>
+</div>
+
+<div class="terminal-body">
+<div class="terminal-note">
+# 建立新的研究空間<br>
+# 切換指定 Notebook
+</div>
+
+<pre>notebooklm create "我的研究"
+
+notebooklm use &lt;notebook_id&gt;</pre>
+</div>
+</div>
+
+<div class="progress"><span style="width:71%"></span></div>
+<div class="page">5/7</div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 6 -->
+
+<div class="slide">
+
+<div class="brand">@catalina.ai.workflow</div>
+
+<h2>新增來源<br>直接提問</h2>
+
+<div class="screenshot">
+<img src="notebooklm-repo.png">
+</div>
+
+<p style="margin-top:12px;">
+網址 → 知識庫 → AI整理
+</p>
+
+<div class="progress"><span style="width:85%"></span></div>
+
+<div class="page">6/7</div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 7 -->
+
+<div class="slide cover">
+
+<div class="cta">
+
+<h1 class="highlight">
+工具
+</h1>
+
+<p>
+留言「工具」<br>
+拿 GitHub 連結與安裝程式碼
+</p>
+
+</div>
+
+<div class="progress"><span style="width:100%"></span></div>
+
+<div class="page">7/7</div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>SAVE</span>
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

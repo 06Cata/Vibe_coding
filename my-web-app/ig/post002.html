@@ -1,0 +1,501 @@
+```html
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 分身輪播</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:#111;
+    padding:30px;
+}
+
+.container{
+    max-width:420px;
+    margin:auto;
+}
+
+.slide{
+    width:400px;
+    height:500px;
+    margin:24px auto;
+    padding:32px;
+    border-radius:24px;
+    overflow:hidden;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.cover{
+
+    color:white;
+
+    background:
+        linear-gradient(
+            rgba(0,0,0,.65),
+            rgba(0,0,0,.45)
+        ),
+        url("catalina_avatar.png");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+}
+
+.light{
+    background:#F5F1E8;
+    color:#1F2A24;
+}
+
+.dark{
+    background:#1F2A24;
+    color:white;
+}
+
+.orange{
+    color:#D98C4A;
+}
+
+.brand{
+    position:absolute;
+    top:18px;
+    left:22px;
+    font-size:12px;
+    opacity:.9;
+    letter-spacing:.5px;
+}
+
+.footer{
+    position:absolute;
+    bottom:16px;
+    left:22px;
+    right:22px;
+    display:flex;
+    justify-content:space-between;
+    font-size:12px;
+    opacity:.85;
+}
+
+.cover-card{
+    background:rgba(0,0,0,.45);
+    backdrop-filter:blur(12px);
+
+    padding:24px;
+
+    border-radius:24px;
+
+    border:1px solid rgba(255,255,255,.15);
+
+    position:relative;
+
+    overflow:hidden;
+
+    min-height:380px;
+}
+
+h1{
+    font-size:40px;
+    line-height:1.1;
+    font-weight:800;
+    margin-bottom:16px;
+}
+
+h2{
+    font-size:28px;
+    line-height:1.2;
+    font-weight:800;
+    margin-bottom:20px;
+}
+
+p{
+    font-size:18px;
+    line-height:1.6;
+    margin-bottom:12px;
+}
+
+.big{
+    font-size:24px;
+    font-weight:700;
+}
+
+.center{
+    text-align:center;
+}
+
+.checklist{
+    font-size:22px;
+    line-height:1.9;
+}
+
+.video-wrap{
+    width:100%;
+    margin:12px 0;
+}
+
+.video-wrap video{
+    width:100%;
+    max-height:220px;
+    border-radius:18px;
+    object-fit:contain;
+    background:#000;
+}
+
+.avatar-note{
+    font-size:16px;
+    line-height:1.5;
+    text-align:center;
+    color:#dcdcdc;
+    margin-top:10px;
+}
+
+.highlight{
+    color:#D98C4A;
+    font-weight:700;
+}
+
+.cover{
+    color:white;
+
+    background:
+        linear-gradient(
+            rgba(0,0,0,.65),
+            rgba(0,0,0,.45)
+        ),
+        url("catalina_avatar.png");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+}
+
+.cover-avatar{
+
+    position:absolute;
+
+    right:-10px;
+
+    bottom:0;
+
+    width:155px;
+
+    z-index:20;
+
+    object-fit:contain;
+
+    filter:
+        drop-shadow(0 15px 35px rgba(0,0,0,.45));
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- PAGE 1 -->
+
+<div class="slide cover">
+
+<div class="brand">
+@catalina.ai.workflow
+</div>
+
+<div class="cover-card">
+
+<h1>
+不想自己拍片的人<br>
+<span class="orange">一定要看</span>
+</h1>
+
+<p class="big">
+AI 分身正在改變短影音
+</p>
+
+<p>
+以前要一直重拍<br>
+現在讓 AI 幫我講
+</p>
+
+<img
+    src="catalina_avatar-remove.png"
+    class="cover-avatar"
+    alt="Catalina Avatar"
+>
+
+<div style="
+margin-top:18px;
+display:inline-block;
+padding:10px 16px;
+border-radius:999px;
+background:rgba(217,140,74,.15);
+border:1px solid rgba(217,140,74,.4);
+font-size:15px;
+font-weight:700;
+color:#D98C4A;
+">
+▶ 滑到第 5 頁看成果
+</div>
+
+</div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>1/7 SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 2 -->
+
+<div class="slide light">
+
+<div class="brand">
+@catalina.ai.workflow
+</div>
+
+<h2>
+做短影音最累的
+</h2>
+
+<p class="big">
+不是剪片
+</p>
+
+<p>
+而是一直重拍
+</p>
+
+<p>
+忘詞重拍<br>
+換衣服重拍<br>
+換場景重拍
+</p>
+
+<p>
+今天不想露臉<br>
+就直接停更
+</p>
+
+<div class="footer">
+<span>SHARE</span>
+<span>2/7 SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 3 -->
+
+<div class="slide dark">
+
+<div class="brand">
+@catalina.ai.workflow
+</div>
+
+<h2>
+以前 vs 現在
+</h2>
+
+<p>
+以前：
+自己出鏡<br>
+自己講<br>
+自己錄
+</p>
+
+<p class="orange big">
+現在：
+AI 分身幫你講
+</p>
+
+<p>
+你負責內容<br>
+AI 負責出鏡
+</p>
+
+<div class="footer">
+<span>SHARE</span>
+<span>3/7 SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 4 -->
+
+<div class="slide light">
+
+<div class="brand">
+@catalina.ai.workflow
+</div>
+
+<h2>
+AI 分身最適合誰？
+</h2>
+
+<div class="checklist">
+✓ 個人品牌<br>
+✓ 上班族<br>
+✓ 顧問講師<br>
+✓ 小品牌商家
+</div>
+
+<p style="margin-top:20px;">
+把重複說過的內容<br>
+交給 AI 處理
+</p>
+
+<div class="footer">
+<span>SHARE</span>
+<span>4/7 SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 5 -->
+
+<div class="slide dark">
+
+<div class="brand">
+@catalina.ai.workflow
+</div>
+
+<h2 class="center">
+這是我的 AI 分身
+</h2>
+
+<div class="video-wrap">
+<video controls>
+<source src="catalina_avatar.mp4" type="video/mp4">
+</video>
+</div>
+
+<div class="avatar-note">
+
+真人拍攝？<br>
+
+<span class="highlight">
+其實不是
+</span>
+
+<br><br>
+
+這支影片是 AI 分身生成
+
+<br>
+
+我只需要準備腳本
+
+<br>
+
+AI 幫我完成出鏡
+
+</div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>5/7 SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 6 -->
+
+<div class="slide light">
+
+<div class="brand">
+@catalina.ai.workflow
+</div>
+
+<h2>
+優點與缺點
+</h2>
+
+<p class="orange">
+優點
+</p>
+
+<p>
+✓ 不用一直重拍<br>
+✓ 可快速量產內容<br>
+✓ 可多語言輸出
+</p>
+
+<p class="orange">
+缺點
+</p>
+
+<p>
+✗ 表情較制式<br>
+✗ 情緒感染力較弱
+</p>
+
+<p>
+把它當助理<br>
+不是真人替代品
+</p>
+
+<div class="footer">
+<span>SHARE</span>
+<span>6/7 SAVE</span>
+</div>
+
+</div>
+
+<!-- PAGE 7 -->
+
+<div class="slide cover">
+
+<div class="brand">
+@catalina.ai.workflow
+</div>
+
+<div class="cover-card">
+
+<h2>
+未來可能不是
+</h2>
+
+<h1>
+AI 取代人
+</h1>
+
+<p>
+而是
+</p>
+
+<p class="big">
+有 AI 分身的人
+</p>
+
+<p>
+取代沒有的人
+</p>
+
+
+
+</div>
+
+<div class="footer">
+<span>SHARE</span>
+<span>7/7 SAVE</span>
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
+```

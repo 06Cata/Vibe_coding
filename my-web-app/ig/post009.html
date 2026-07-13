@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SQL 進階｜資料庫不是能存就好</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--cream:#F5F1E8;--green:#1F2A24;--orange:#D98C4A;--olive:#5E6B4E;--ink:#111814}
+body{min-height:100vh;background:#111;font-family:'Noto Sans TC',sans-serif;color:var(--ink);display:flex;align-items:center;justify-content:center;padding:30px 14px}
+.preview{width:430px;max-width:100%}.frame{width:430px;max-width:100%;padding:14px;border-radius:34px;background:#050505;box-shadow:0 24px 80px rgba(0,0,0,.55)}
+.track{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;border-radius:28px}.track::-webkit-scrollbar{display:none}
+.slide{position:relative;flex:0 0 400px;width:400px;height:500px;overflow:hidden;border-radius:24px;scroll-snap-align:center;padding:22px 24px 130px;background:var(--cream)}
+.brand{position:absolute;top:20px;left:24px;font-size:12px;font-weight:700;z-index:8;color:inherit;opacity:.82}
+.topic-tag{display:inline-flex;align-items:center;margin-top:48px;padding:7px 12px;border-radius:999px;background:var(--orange);color:#fff;font-size:13px;font-weight:900;letter-spacing:.08em;box-shadow:0 12px 28px rgba(217,140,74,.24)}
+.footer{position:absolute;left:24px;right:24px;bottom:16px;display:flex;justify-content:space-between;font-size:11px;font-weight:800;letter-spacing:.14em;z-index:8;color:inherit;opacity:.78}
+.progress{position:absolute;left:24px;bottom:54px;width:118px;height:3px;background:rgba(120,120,120,.22);border-radius:999px;overflow:hidden;z-index:8}.progress span{display:block;height:100%;background:var(--orange);border-radius:999px}
+.page{position:absolute;right:24px;bottom:50px;font-size:12px;font-weight:800;z-index:8;color:inherit;opacity:.78}.nextmark{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:26px;font-weight:900;color:inherit;opacity:.34;z-index:8}
+h1{font-size:38px;font-weight:800;line-height:1.08;letter-spacing:0}h2{font-size:31px;font-weight:850;line-height:1.12;letter-spacing:0}p{font-size:17px;font-weight:750;line-height:1.5}.accent{color:var(--orange)}
+.cover{color:#F8F4EA;background:linear-gradient(180deg,rgba(0,0,0,.34),rgba(0,0,0,.55)),radial-gradient(circle at 82% 72%,rgba(217,140,74,.16),transparent 30%),url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80');background-size:cover;background-position:center}
+.cover h1{margin-top:54px;text-shadow:0 4px 24px rgba(0,0,0,.55)}.cover .sub{margin-top:18px;color:rgba(248,244,234,.86);font-size:17px;line-height:1.55;text-shadow:0 3px 16px rgba(0,0,0,.55)}
+.cream h2,.dark h2,.split h2,.cta h2{margin-top:34px}
+.lead{margin-top:16px;color:#354039}.big-card{margin-top:24px;padding:22px;border-radius:22px;background:#fff;border:1px solid rgba(31,42,36,.10);box-shadow:0 16px 36px rgba(31,42,36,.10)}.big-card p{font-size:20px;line-height:1.45}
+.dark{background:var(--green);color:#F5F1E8}.dark h2{color:#F5F1E8}.dark .lead{color:rgba(245,241,232,.82)}
+.steps{display:grid;gap:10px;margin-top:22px}.step{display:grid;grid-template-columns:38px 1fr;gap:11px;align-items:center;padding:11px 13px;border-radius:17px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}.no{width:34px;height:34px;border-radius:50%;background:var(--orange);color:#fff;display:grid;place-items:center;font-size:14px;font-weight:900}.step span{font-size:16px;font-weight:850;line-height:1.28}
+.split-grid{display:grid;gap:12px;margin-top:22px}.compare{padding:16px;border-radius:20px;border:1px solid rgba(31,42,36,.10);background:#fff;box-shadow:0 14px 30px rgba(31,42,36,.08)}.compare b{display:block;color:var(--orange);font-size:14px;margin-bottom:8px}.compare span{font-size:18px;font-weight:850;line-height:1.35}
+.code-card{margin-top:20px;border-radius:18px;background:#050505;color:#dce8f6;overflow:hidden;box-shadow:0 16px 34px rgba(0,0,0,.22)}.code-bar{height:32px;background:#111;color:#94a3b8;font-family:Menlo,monospace;font-size:11px;font-weight:800;padding:9px 14px}.code{padding:14px 16px;font-family:Menlo,monospace;font-size:12px;line-height:1.5;white-space:pre-wrap}.code .kw{color:#f3b27c}.code .ok{color:#80d39b}
+.quote{margin-top:24px;padding:20px;border-left:5px solid var(--orange);border-radius:18px;background:rgba(217,140,74,.10);font-size:19px;font-weight:900;line-height:1.5}
+.pill-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.pill{padding:10px 12px;border-radius:999px;background:#fff;border:1px solid rgba(31,42,36,.10);font-size:15px;font-weight:900;color:#253028}
+.compact .topic-tag{margin-top:38px;padding:6px 11px;font-size:12px}.compact h2{margin-top:22px;font-size:28px;line-height:1.08}.compact .split-grid{gap:9px;margin-top:16px}.compact .compare{padding:12px 14px;border-radius:17px}.compact .compare b{font-size:13px;margin-bottom:5px}.compact .compare span{font-size:16px;line-height:1.25}
+.acid .topic-tag{margin-top:38px;padding:6px 11px;font-size:12px}.acid h2{margin-top:20px;font-size:28px;line-height:1.08}.acid .steps{gap:8px;margin-top:16px}.acid .step{grid-template-columns:34px 1fr;padding:8px 11px;border-radius:15px}.acid .no{width:30px;height:30px;font-size:13px}.acid .step span{font-size:15px;line-height:1.18}
+.cta{background:radial-gradient(circle at 76% 20%,rgba(217,140,74,.28),transparent 30%),linear-gradient(180deg,#050505,#111);color:#F8F4EA}.cta .topic-tag{margin-top:38px;padding:6px 11px;font-size:12px}.cta h2{color:#F8F4EA;font-size:32px;line-height:1.08;margin-top:40px}.keyword{margin-top:22px;border-radius:22px;background:var(--cream);color:var(--green);padding:17px;text-align:center;font-size:30px;font-weight:900;box-shadow:0 22px 54px rgba(0,0,0,.3)}.cta p{margin-top:14px;color:rgba(248,244,234,.78);font-size:16px;line-height:1.35}
+.controls{display:flex;justify-content:center;gap:10px;margin-top:14px}button{border:0;border-radius:999px;background:#F5F1E8;color:#111;padding:10px 18px;font-weight:900;cursor:pointer}
+@media(max-width:460px){body{padding:12px 0}.preview,.frame{width:100%}.slide{flex-basis:400px}.controls{margin-bottom:10px}}
+</style>
+</head>
+<body>
+<div class="preview">
+  <div class="frame">
+    <main class="track" id="track">
+      <section class="slide cover">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="topic-tag">SQL進階1</div>
+        <h1>資料庫<br>不是能存<br><span class="accent">就好</span></h1>
+        <p class="sub">Vibe Coding 做到後面<br>一定會遇到資料安全</p>
+        <div class="progress"><span style="width:12.5%"></span></div><div class="page">1/8</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide cream">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="topic-tag">SQL進階</div>
+        <h2>新手最常<br>漏掉這件事</h2>
+        <p class="lead">資料庫不是只設欄位<br>還要設計「怎麼安全更新」</p>
+        <div class="big-card"><p>使用者按下送出後<br>資料不能偷偷亂掉</p></div>
+        <div class="progress"><span style="width:25%"></span></div><div class="page">2/8</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide dark">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="topic-tag">SQL進階</div>
+        <h2>什麼是<br>Transaction？</h2>
+        <p class="lead">一組資料操作<br>被當成同一件事處理</p>
+        <div class="quote">要嘛全部成功<br>要嘛全部失敗</div>
+        <div class="progress"><span style="width:37.5%"></span></div><div class="page">3/8</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide split compact">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="topic-tag">SQL進階</div>
+        <h2>為什麼<br>會出事？</h2>
+        <div class="split-grid">
+          <div class="compare"><b>使用者 A</b><span>同時扣 100 元</span></div>
+          <div class="compare"><b>使用者 B</b><span>同時扣 200 元</span></div>
+          <div class="compare"><b>結果</b><span>其中一筆可能被蓋掉</span></div>
+        </div>
+        <div class="progress"><span style="width:50%"></span></div><div class="page">4/8</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide dark acid">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="topic-tag">SQL進階</div>
+        <h2>ACID<br>在保護什麼？</h2>
+        <div class="steps">
+          <div class="step"><div class="no">A</div><span>成功或全部失敗</span></div>
+          <div class="step"><div class="no">C</div><span>資料符合規則</span></div>
+          <div class="step"><div class="no">I</div><span>多人操作不互卡</span></div>
+          <div class="step"><div class="no">D</div><span>存進去不能消失</span></div>
+        </div>
+        <div class="progress"><span style="width:62.5%"></span></div><div class="page">5/8</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide cream">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="topic-tag">SQL進階</div>
+        <h2>常見問題<br>其實很生活</h2>
+        <div class="pill-list">
+          <div class="pill">髒讀</div>
+          <div class="pill">幻讀</div>
+          <div class="pill">重複讀不同</div>
+          <div class="pill">更新被蓋掉</div>
+        </div>
+        <div class="big-card"><p>翻成人話：<br>你看到的資料可能不是最後結果</p></div>
+        <div class="progress"><span style="width:75%"></span></div><div class="page">6/8</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide dark">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="topic-tag">SQL進階</div>
+        <h2>需要改錢<br>就要特別小心</h2>
+        <div class="code-card">
+          <div class="code-bar">SQL</div>
+          <div class="code"><span class="kw">SELECT</span> balance
+<span class="kw">FROM</span> accounts
+<span class="kw">WHERE</span> id = 1
+<span class="ok">FOR UPDATE</span>;</div>
+        </div>
+        <p class="lead">這種情境要鎖住資料<br>避免更新互相覆蓋</p>
+        <div class="progress"><span style="width:87.5%"></span></div><div class="page">7/8</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide cta">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="topic-tag">SQL進階</div>
+        <h2>Vibe Coding<br>進階會遇到</h2>
+        <div class="keyword">留言「資料庫」</div>
+        <p>做資料庫時<br>記得提醒 AI 考慮這層</p>
+        <div class="progress"><span style="width:100%"></span></div><div class="page">8/8</div><div class="footer"><span>SHARE</span><span>SAVE</span></div>
+      </section>
+    </main>
+  </div>
+  <div class="controls"><button onclick="go(-1)">上一張</button><button onclick="go(1)">下一張</button></div>
+</div>
+<script>
+const track = document.getElementById('track');
+let index = 0;
+const total = document.querySelectorAll('.slide').length;
+const step = 422;
+function go(delta){
+  index = Math.max(0, Math.min(total - 1, index + delta));
+  track.scrollTo({left:index * step, behavior:'smooth'});
+}
+track.addEventListener('scroll',()=>{index=Math.round(track.scrollLeft / step);});
+document.addEventListener('keydown',(event)=>{
+  if(event.key==='ArrowRight')go(1);
+  if(event.key==='ArrowLeft')go(-1);
+});
+</script>
+</body>
+</html>

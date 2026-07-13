@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SQL 進階2｜什麼時候要資料分片</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--cream:#F5F1E8;--green:#1F2A24;--orange:#D98C4A;--ink:#111814}
+body{min-height:100vh;background:#111;font-family:'Noto Sans TC',sans-serif;color:var(--ink);display:flex;align-items:center;justify-content:center;padding:30px 14px}
+.preview{width:430px;max-width:100%}.frame{width:430px;max-width:100%;padding:14px;border-radius:34px;background:#050505;box-shadow:0 24px 80px rgba(0,0,0,.55)}
+.track{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;border-radius:28px}.track::-webkit-scrollbar{display:none}
+.slide{position:relative;flex:0 0 400px;width:400px;height:500px;overflow:hidden;border-radius:24px;scroll-snap-align:center;padding:22px 24px 130px;background:var(--cream)}
+.brand{position:absolute;top:20px;left:24px;font-size:12px;font-weight:700;z-index:8;color:inherit;opacity:.82}
+.topic-tag{display:inline-flex;align-items:center;margin-top:48px;padding:7px 12px;border-radius:999px;background:var(--orange);color:#fff;font-size:13px;font-weight:900;letter-spacing:.08em;box-shadow:0 12px 28px rgba(217,140,74,.24)}
+.footer{position:absolute;left:24px;right:24px;bottom:16px;display:flex;justify-content:space-between;font-size:11px;font-weight:800;letter-spacing:.14em;z-index:8;color:inherit;opacity:.78}
+.progress{position:absolute;left:24px;bottom:54px;width:118px;height:3px;background:rgba(120,120,120,.22);border-radius:999px;overflow:hidden;z-index:8}.progress span{display:block;height:100%;background:var(--orange);border-radius:999px}
+.page{position:absolute;right:24px;bottom:50px;font-size:12px;font-weight:800;z-index:8;color:inherit;opacity:.78}.nextmark{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:26px;font-weight:900;color:inherit;opacity:.34;z-index:8}
+h1{font-size:38px;font-weight:800;line-height:1.08;letter-spacing:0}h2{font-size:31px;font-weight:850;line-height:1.12;letter-spacing:0}p{font-size:17px;font-weight:750;line-height:1.5}.accent{color:var(--orange)}
+.cover{color:#F8F4EA;background:linear-gradient(180deg,rgba(0,0,0,.34),rgba(0,0,0,.55)),radial-gradient(circle at 82% 72%,rgba(217,140,74,.16),transparent 30%),url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=900&q=80');background-size:cover;background-position:center}
+.cover h1{margin-top:54px;text-shadow:0 4px 24px rgba(0,0,0,.55)}.cover .sub{margin-top:18px;color:rgba(248,244,234,.86);font-size:17px;line-height:1.55;text-shadow:0 3px 16px rgba(0,0,0,.55)}
+.cream h2,.dark h2,.cta h2{margin-top:34px}.lead{margin-top:16px;color:#354039}
+.big-card{margin-top:22px;padding:20px;border-radius:22px;background:#fff;border:1px solid rgba(31,42,36,.10);box-shadow:0 16px 36px rgba(31,42,36,.10)}.big-card p{font-size:19px;line-height:1.4}
+.dark{background:var(--green);color:#F5F1E8}.dark h2{color:#F5F1E8}.dark .lead{color:rgba(245,241,232,.82)}
+.quote{margin-top:22px;padding:18px;border-left:5px solid var(--orange);border-radius:18px;background:rgba(217,140,74,.10);font-size:19px;font-weight:900;line-height:1.45}
+.steps{display:grid;gap:10px;margin-top:20px}.step{display:grid;grid-template-columns:38px 1fr;gap:11px;align-items:center;padding:10px 13px;border-radius:17px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}.no{width:34px;height:34px;border-radius:50%;background:var(--orange);color:#fff;display:grid;place-items:center;font-size:14px;font-weight:900}.step span{font-size:16px;font-weight:850;line-height:1.25}
+.split-grid{display:grid;gap:8px;margin-top:14px}.compare{padding:10px 13px;border-radius:16px;border:1px solid rgba(31,42,36,.10);background:#fff;box-shadow:0 12px 26px rgba(31,42,36,.08)}.compare b{display:block;color:var(--orange);font-size:12px;margin-bottom:3px}.compare span{font-size:15px;font-weight:850;line-height:1.18}
+.diagram{display:grid;grid-template-columns:1fr 30px 1fr;gap:7px;align-items:center;margin-top:16px}.db,.shard{border-radius:16px;padding:10px 8px;text-align:center;font-size:14px;font-weight:900;background:#fff;border:1px solid rgba(31,42,36,.10);box-shadow:0 10px 24px rgba(31,42,36,.08)}.arrow{color:var(--orange);font-size:22px;font-weight:900;text-align:center}.shards{display:grid;gap:6px}.shard{background:#F8F4EA}
+.pill-list{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}.pill{padding:9px 11px;border-radius:999px;background:#fff;border:1px solid rgba(31,42,36,.10);font-size:14px;font-weight:900;color:#253028}
+.compact .topic-tag{margin-top:38px;padding:6px 11px;font-size:12px}.compact h2{margin-top:22px;font-size:28px;line-height:1.08}.compact .lead{margin-top:12px}.compact .big-card{margin-top:16px;padding:16px}.compact .big-card p{font-size:17px;line-height:1.32}.compact .quote{margin-top:16px;padding:16px;font-size:17px;line-height:1.35}
+.rules .topic-tag{margin-top:38px;padding:6px 11px;font-size:12px}.rules h2{margin-top:20px;font-size:28px;line-height:1.08}.rules .steps{gap:8px;margin-top:16px}.rules .step{grid-template-columns:34px 1fr;padding:8px 11px;border-radius:15px}.rules .no{width:30px;height:30px;font-size:13px}.rules .step span{font-size:15px;line-height:1.18}
+.cta{background:radial-gradient(circle at 76% 20%,rgba(217,140,74,.28),transparent 30%),linear-gradient(180deg,#050505,#111);color:#F8F4EA}.cta .topic-tag{margin-top:38px;padding:6px 11px;font-size:12px}.cta h2{color:#F8F4EA;font-size:32px;line-height:1.08;margin-top:40px}.keyword{margin-top:22px;border-radius:22px;background:var(--cream);color:var(--green);padding:17px;text-align:center;font-size:30px;font-weight:900;box-shadow:0 22px 54px rgba(0,0,0,.3)}.cta p{margin-top:14px;color:rgba(248,244,234,.78);font-size:16px;line-height:1.35}
+.controls{display:flex;justify-content:center;gap:10px;margin-top:14px}button{border:0;border-radius:999px;background:#F5F1E8;color:#111;padding:10px 18px;font-weight:900;cursor:pointer}
+@media(max-width:460px){body{padding:12px 0}.preview,.frame{width:100%}.slide{flex-basis:400px}.controls{margin-bottom:10px}}
+</style>
+</head>
+<body>
+<div class="preview">
+  <div class="frame">
+    <main class="track" id="track">
+      <section class="slide cover">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="topic-tag">SQL進階2</div>
+        <h1>資料太大<br>不是只加<br><span class="accent">一台主機</span></h1>
+        <p class="sub">Vibe Coding 進階<br>要懂資料分片</p>
+        <div class="progress"><span style="width:12.5%"></span></div><div class="page">1/8</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide cream compact">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="topic-tag">SQL進階2</div>
+        <h2>什麼是<br>資料分片？</h2>
+        <p class="lead">把一大坨資料<br>拆到多個資料庫裡</p>
+        <div class="diagram">
+          <div class="db">一大張表</div>
+          <div class="arrow">→</div>
+          <div class="shards"><div class="shard">片 1</div><div class="shard">片 2</div><div class="shard">片 3</div></div>
+        </div>
+        <div class="progress"><span style="width:25%"></span></div><div class="page">2/8</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide dark">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="topic-tag">SQL進階2</div>
+        <h2>人話版<br>像分店</h2>
+        <p class="lead">一間店排不下<br>就開多間分店分流</p>
+        <div class="quote">不是每個客人<br>都擠在同一個櫃台</div>
+        <div class="progress"><span style="width:37.5%"></span></div><div class="page">3/8</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide cream compact">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="topic-tag">SQL進階2</div>
+        <h2>什麼時候<br>要考慮？</h2>
+        <div class="split-grid">
+          <div class="compare"><b>資料量爆大</b><span>單表查詢越來越慢</span></div>
+          <div class="compare"><b>寫入太頻繁</b><span>同一庫扛不住流量</span></div>
+          <div class="compare"><b>使用者很多</b><span>不同地區都在使用</span></div>
+        </div>
+        <div class="progress"><span style="width:50%"></span></div><div class="page">4/8</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide dark rules">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="topic-tag">SQL進階2</div>
+        <h2>怎麼分？<br>先找規則</h2>
+        <div class="steps">
+          <div class="step"><div class="no">1</div><span>照使用者 id 分</span></div>
+          <div class="step"><div class="no">2</div><span>照地區分</span></div>
+          <div class="step"><div class="no">3</div><span>照時間分</span></div>
+          <div class="step"><div class="no">4</div><span>照租戶或品牌分</span></div>
+        </div>
+        <div class="progress"><span style="width:62.5%"></span></div><div class="page">5/8</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide cream compact">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="topic-tag">SQL進階2</div>
+        <h2>但不要<br>太早分片</h2>
+        <p class="lead">分片不是加速魔法<br>它會讓系統變複雜</p>
+        <div class="big-card"><p>先確認索引、查詢、快取<br>都已經優化過</p></div>
+        <div class="progress"><span style="width:75%"></span></div><div class="page">6/8</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide dark compact">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="topic-tag">SQL進階2</div>
+        <h2>提醒 AI<br>這樣問</h2>
+        <div class="quote">這個功能未來資料量大，資料表要不要預留分片設計？</div>
+        <p class="lead">不用自己設計完<br>但要知道什麼時候問</p>
+        <div class="progress"><span style="width:87.5%"></span></div><div class="page">7/8</div><div class="footer"><span>SHARE</span><span>SAVE</span></div><div class="nextmark">›</div>
+      </section>
+
+      <section class="slide cta">
+        <div class="brand">@catalina.ai.workflow</div>
+        <div class="topic-tag">SQL進階2</div>
+        <h2>Vibe Coding<br>做到這層</h2>
+        <div class="keyword">留言「分片」</div>
+        <p>我整理一份<br>資料庫擴充檢查表</p>
+        <div class="progress"><span style="width:100%"></span></div><div class="page">8/8</div><div class="footer"><span>SHARE</span><span>SAVE</span></div>
+      </section>
+    </main>
+  </div>
+  <div class="controls"><button onclick="go(-1)">上一張</button><button onclick="go(1)">下一張</button></div>
+</div>
+<script>
+const track = document.getElementById('track');
+let index = 0;
+const total = document.querySelectorAll('.slide').length;
+const step = 422;
+function go(delta){
+  index = Math.max(0, Math.min(total - 1, index + delta));
+  track.scrollTo({left:index * step, behavior:'smooth'});
+}
+track.addEventListener('scroll',()=>{index=Math.round(track.scrollLeft / step);});
+document.addEventListener('keydown',(event)=>{
+  if(event.key==='ArrowRight')go(1);
+  if(event.key==='ArrowLeft')go(-1);
+});
+</script>
+</body>
+</html>
