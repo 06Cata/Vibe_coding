@@ -168,7 +168,7 @@ h3 {
   max-width: 620px;
   margin-bottom: 34px;
   color: var(--muted);
-  font-size: clamp(0.82rem, 1.7vw, 1.1rem);
+  font-size: clamp(0.86rem, 1.75vw, 1.15rem);
 }
 
 .button {
